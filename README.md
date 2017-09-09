@@ -2,8 +2,8 @@ Master: [![Build Status](https://travis-ci.org/htchepannou/academy-classroom-web
 [![Code Coverage](https://img.shields.io/codecov/c/github/htchepannou/academy-classroom-webui/master.svg)](https://codecov.io/github/htchepannou/academy-classroom-webui?branch=master)
 [![JDK](https://img.shields.io/badge/jdk-1.8-brightgreen.svg)](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
-# Academy Service
-Academy Service provide a REST API for managing a library of online courses
+# Classroom WebUI
+Web UI for classroom where students attend their courses online.
 
 ## Requirements
 - Java 1.8
