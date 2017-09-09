@@ -16,11 +16,7 @@ endpoints:
 logging:
   level:
     root: INFO
-    com.amazonaws: ERROR
     org.springframework: INFO
-    org.hibernate: ERROR
-    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: OFF
-    springfox: ERROR
 
   pattern:
     console: "%d Type=%level Logger=%c Thread=%thread %m%n"
