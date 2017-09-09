@@ -31,8 +31,8 @@ Navigate to a [sample classroom](http://localhost:8080/classroom/100)
     - [Service Health](http://localhost:8080/health) 
 
 - Integration Environment
-    - [Aample classroom](https://io-tchepannou-classroom-webui.herokuapp.com/classroom/100)
-    - [Service Health](https://io-tchepannou-classroom-webui.herokuapp.com/health) 
+    - [Sample classroom](https://io-tchepannou-a-classroom-web.herokuapp.com/classroom/100)
+    - [Service Health](https://io-tchepannou-a-classroom-web.herokuapp.com/health) 
 
 ## License
 This project is open source sofware under the [MIT License](https://opensource.org/licenses/MIT)
