@@ -8,7 +8,6 @@ Web UI for classroom where students attend their courses online.
 ## Requirements
 - Java 1.8
 - Maven
-- MySQL
 
 ## Installation
 Clone the code repository locally and build it.
