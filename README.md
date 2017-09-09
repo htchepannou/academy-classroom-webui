@@ -25,14 +25,13 @@ This will generate the service binary ``target/academy-classroom-webui.jar``
 ```
 $ java -jar target/academy-classroom-service.jar
 ```
+Navigate to a [sample classroom](http://localhost:8080/classroom/100)
 
 ## Links
 - Local Environment
-    - [API Documentation](http://localhost:8080/swagger-ui.html) 
     - [Service Health](http://localhost:8080/health) 
 
 - Integration Environment
-    - [API Documentation](https://io-tchepannou-academy-classroom-webui.herokuapp.com/swagger-ui.html) 
     - [Service Health](https://io-tchepannou-academy-classroom-webui.herokuapp.com/health) 
 
 ## License
