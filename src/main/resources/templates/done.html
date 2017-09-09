@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta charset="UTF-8" />
+    <title th:text="${course.title}">Title</title>
+    <meta name="og:title" th:attr="content=${course.title}"/>
+    <meta name="og:description" th:attr="content=${course.summary}"/>
+
+    <link rel="stylesheet" href='/static/lib/bootstrap/3.3.7/css/bootstrap.min.css"'/>
+    <link rel="stylesheet" href='/static/lib/academy/css/academy.css"'/>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                T-Academy
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 th:text="${course.title}">Title</h1>
+
+    <div class="jumbotron">
+        <h2 th:text="#{congratulation.title}">Congratulation!</h2>
+        <p th:text="#{congratulation.text}">You have completed the course</p>
+    </div>
+
+</div>
+
+
+
+<!-- Optional JavaScript -->
+<script src="/static/lib/jquery/3.2.1/js/jquery-3.2.1.min.js"></script>
+<script src="/static/lib/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+backend:
+  academy:
+    port: 18080
+    url: "http://localhost:${backend.academy.port}"

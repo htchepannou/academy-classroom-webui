@@ -1,0 +1,86 @@
+package io.tchepannou.www.academy.classroom.service;
+
+import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import io.tchepannou.www.academy.classroom.backend.academy.dto.CourseDto;
+import io.tchepannou.www.academy.classroom.backend.academy.dto.LessonDto;
+import io.tchepannou.www.academy.classroom.backend.academy.dto.SegmentDto;
+import io.tchepannou.www.academy.classroom.backend.academy.dto.VideoDto;
+import io.tchepannou.www.academy.classroom.model.CourseModel;
+import io.tchepannou.www.academy.classroom.model.LessonModel;
+import io.tchepannou.www.academy.classroom.model.SegmentModel;
+import io.tchepannou.www.academy.classroom.model.VideoModel;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class AcademyMapper {
+    @Autowired
+    private Parser markdownParser;
+
+    @Autowired
+    private HtmlRenderer markdownHtmlRenderer;
+
+    public CourseModel toCourseModel(final CourseDto dto){
+        final CourseModel model = new CourseModel();
+
+        model.setDescription(markdown2Html(dto.getDescription()));
+        model.setId(dto.getId());
+        model.setLanguage(dto.getLanguage());
+        model.setLevel(dto.getLevel());
+        model.setPublishedDateTime(dto.getPublishedDateTime());
+        model.setStatus(dto.getStatus());
+        model.setSummary(dto.getSummary());
+        model.setTitle(dto.getTitle());
+        model.setUpdatedDateTime(dto.getUpdatedDateTime());
+
+        return model;
+    }
+
+    public LessonModel toLessonModel(final LessonDto dto){
+        final LessonModel model = new LessonModel();
+
+        model.setId(dto.getId());
+        model.setRank(dto.getRank());
+        model.setTitle(dto.getTitle());
+        return model;
+    }
+
+    public SegmentModel toSegmentModel(final SegmentDto dto){
+        final SegmentModel model = new SegmentModel();
+
+        model.setId(dto.getId());
+        model.setDescription(markdown2Html(dto.getDescription()));
+        model.setRank(dto.getRank());
+        model.setSummary(dto.getSummary());
+        model.setTitle(dto.getTitle());
+        model.setType(dto.getType());
+        model.setVideoId(dto.getVideoId());
+        return model;
+    }
+
+    public VideoModel toVideoModel(final VideoDto dto){
+        final VideoModel model = new VideoModel();
+        model.setDurationSecond(dto.getDurationSecond());
+        model.setId(dto.getId());
+        model.setType(dto.getType());
+        model.setVideoId(dto.getVideoId());
+
+        if ("youtube".equals(dto.getType())) {
+            final String embedUrl = String.format("https://www.youtube.com/embed/%s", dto.getVideoId());
+            model.setEmbedUrl(embedUrl);
+        }
+        return model;
+    }
+
+    private String markdown2Html(final String text){
+        if (StringUtils.isEmpty(text)){
+            return null;
+        }
+
+        final Node document = markdownParser.parse(text);
+        return markdownHtmlRenderer.render(document);
+    }
+}

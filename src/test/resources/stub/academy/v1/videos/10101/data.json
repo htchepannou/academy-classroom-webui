@@ -1,0 +1,10 @@
+{
+  "transactionId": "64c8437a-0282-4ac1-a68c-64f195c143f0",
+  "transactionDateTime": "2017-09-08T15:48:59-0400",
+  "video": {
+    "id": 10101,
+    "type": "youtube",
+    "videoId": "zYyRDFx3e28",
+    "durationSecond": 52
+  }
+}

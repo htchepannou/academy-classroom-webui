@@ -1,0 +1,25 @@
+language: java
+dist: trusty
+sudo: required
+
+jdk:
+  - oraclejdk8
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+
+install: true
+
+script:
+  - mvn -q install --settings settings.xml
+
+
+notifications:
+  email:
+  - herve.tchepannou@gmail.com
+
+#deploy:
+#  provider: heroku
+#  api_key: $HEROKU_API_KEY
+#  app: io-tchepannou-academy-classroom-webui
+#  on: master

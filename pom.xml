@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.3.RELEASE</version>
+    </parent>
+
+    <groupId>io.tchepannou.www.academy</groupId>
+    <artifactId>academy-classroom-webui</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.jdk.version>${java.version}</project.jdk.version>
+        <project.sourceEncoding>UTF-8</project.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+        <common-lang.version>2.4</common-lang.version>
+        <commons-io.version>2.5</commons-io.version>
+        <flexmark-all.version>0.26.4</flexmark-all.version>
+        <pmd.version>5.5.2</pmd.version>
+        <springfox-swagger.version>2.3.1</springfox-swagger.version>
+
+        <assertj.version>3.0.0</assertj.version>
+        <jetty.version>9.3.11.v20160721</jetty.version>
+        <junit.version>4.12</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+
+        <jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
+        <jacoco.threshold.line>0.89</jacoco.threshold.line>
+        <jacoco.threshold.class>0.89</jacoco.threshold.class>
+        <maven-failsafe-plugin>2.19.1</maven-failsafe-plugin>
+        <maven-pmd-plugin.version>3.7</maven-pmd-plugin.version>
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+        <sql-maven-plugin.version>1.5</sql-maven-plugin.version>
+        <pmd.ruleset.location>src/main/resources/buildtools/pmd/ruleset.xml</pmd.ruleset.location>
+    </properties>
+
+    <dependencies>
+        <!-- ==== SPRING ==== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- MISC -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${common-lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>${flexmark-all.version}</version>
+        </dependency>
+
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.kuali.maven.wagons</groupId>
+                <artifactId>maven-s3-wagon</artifactId>
+                <version>1.2.1</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <!-- BUILD -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${project.jdk.version}</source>
+                    <target>${project.jdk.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <version>3.3</version>
+            </plugin>
+
+
+            <!-- UNIT TEST -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>${surefireArgLine}</argLine>
+                </configuration>
+            </plugin>
+
+
+            <!-- INTEGRATION TEST -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>${failsafeArgLine}</argLine>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!-- SPRING -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.artifactId}</finalName>
+                </configuration>
+            </plugin>
+
+
+            <!-- CODE QUALITY: PMD -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-core</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <targetJdk>${project.jdk.version}</targetJdk>
+                    <includeTests>true</includeTests>
+                    <skip>false</skip>
+                    <sourceEncoding>${project.sourceEncoding}</sourceEncoding>
+                    <rulesets>
+                        <ruleset>${pmd.ruleset.location}</ruleset>
+                    </rulesets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>cpd-report</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- CODE QUALITY: COVERAGE -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+
+                <executions>
+
+                    <!-- unit test -->
+                    <execution>
+                        <id>prepare-agent</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                            <append>true</append>
+
+                        </configuration>
+                    </execution>
+
+                    <!-- integration test -->
+                    <execution>
+                        <id>prepare-it-agent</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+
+                    <!-- merge: unit + integration test -->
+                    <execution>
+                        <id>merge-jacoco-files</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-all.exec</destFile>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate coverage report -->
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-all.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Verify coverage -->
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*Application.*</exclude>
+                                <exclude>io/tchepannou/www/academy/classroom/config/*.*</exclude>
+                                <exclude>io/tchepannou/www/academy/classroom/model/*.*</exclude>
+                                <exclude>io/tchepannou/www/academy/classroom/backend/academy/dto/*/*.*</exclude>
+                            </excludes>
+                            <dataFile>${project.build.directory}/jacoco-all.exec</dataFile>
+
+                            <rules>
+                                <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.threshold.line}</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>CLASS</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.threshold.class}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>io.tchepannou.maven</id>
+            <url>s3://io.tchepannou.maven/snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>io.tchepannou.maven</id>
+            <url>s3://io.tchepannou.maven/release</url>
+        </repository>
+    </distributionManagement>
+
+
+    <repositories>
+        <repository>
+            <id>maven-central</id>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>oss-jfrog-artifactory</id>
+            <name>oss-jfrog-artifactory-releases</name>
+            <url>http://oss.jfrog.org/artifactory/oss-release-local</url>
+        </repository>
+        <repository>
+            <id>bintray-readytalk</id>
+            <name>bintray readytalk</name>
+            <url>http://dl.bintray.com/readytalk/maven</url>
+        </repository>
+        <repository>
+            <id>io.tchepannou.maven</id>
+            <url>s3://io.tchepannou.maven/release</url>
+        </repository>
+    </repositories>
+
+</project>

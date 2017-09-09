@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta charset="UTF-8" />
+    <title th:text="${course.title}">Title</title>
+    <meta name="og:title" th:attr="content=${course.title}"/>
+    <meta name="og:description" th:attr="content=${course.summary}"/>
+
+    <link rel="stylesheet" href='/static/lib/bootstrap/3.3.7/css/bootstrap.min.css"'/>
+    <link rel="stylesheet" href='/static/lib/academy/css/academy.css"'/>
+</head>
+<body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    T-Academy
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 th:text="${course.title}">Title</h1>
+
+        <div class="row content-and-playlist">
+
+            <div class="col-md-4 playlist">
+                <h4 th:text="${lesson.rank} + '. ' + ${lesson.title}">#</h4>
+                <ul>
+                    <li th:each="item:${segments}" th:classappend="${item} == ${segment} ? active : ''">
+                        <a th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
+                            <span class="rank"  th:text="${item.rank}"></span>
+                            <span class="title" th:text="${item.title}">Segment Title</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-8 content">
+                <h3 class="segment-title" th:text="${segment.rank} + '. ' + ${segment.title}">Segment Title</h3>
+
+                <div class="segment-content">
+                    <div id="video-player"></div>
+                    <div class="markdown" th:utext="${segment.description}">Description here...</div>
+
+                    <div class="pull-right" th:if="${segment.type} == 'text'">
+                        <a class="btn btn-primary" th:attr="href=${nextUrl}" th:text="#{button.continue}">...</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- Optional JavaScript -->
+    <script src="/static/lib/jquery/3.2.1/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/lib/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script th:inline="javascript" th:if="${video} != null">
+    //<![CDATA[
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            console.log('onYouTubeIframeAPIReady()');
+            player = new YT.Player( 'video-player', {
+                width: 600,
+                height: 400,
+                videoId: /*[[${video.videoId}]]*/ 'ID',
+                events: {
+                    'onReady': function(event){
+                        console.log('onReady', event);
+                        event.target.playVideo();
+                    },
+                    'onStateChange': function(event){
+                        console.log('onStateChange', event);
+                        var nextUrl = /*[[${nextUrl}]]*/ 'value';
+                        if (nextUrl && event.data == YT.PlayerState.ENDED){
+                            location.href = nextUrl;
+                        }
+                    }
+                }
+            });
+            console.log('player', player);
+        }
+    //]]>
+    </script>
+</body>
+</html>

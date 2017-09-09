@@ -1,0 +1,44 @@
+.content-and-playlist{
+}
+.content iframe.video {
+    width: 100%;
+    height: 400px;
+}
+
+.playlist{
+    background: #f1f4f4;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.playlist ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.playlist li {
+    overflow: hidden;
+    padding: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .85em;
+}
+.playlist li.active {
+    background: #fff;
+    font-weight: 500;
+}
+.playlist li .rank{
+    margin-left: .25em;
+    margin-right: .25em;
+    text-align: left;
+    float: left;
+    width: 25px;
+}
+.playlist li .rank::after{
+    content: ".";
+}
+
+h3.segment-title {
+    margin-top: 0;
+    border-bottom: 1px solid gray;
+}
+

@@ -1,0 +1,15 @@
+{
+  "transactionId": "5a0bc650-f6e1-4264-8eb5-878f3c409768",
+  "transactionDateTime": "2017-09-08T15:18:53-0400",
+  "course": {
+    "id": 100,
+    "title": "How to write README",
+    "summary": "Learn the importance of well documented code and see how to craft meaningful READMEs.",
+    "description": "Documentation is an important part of the development process. Learn to write READMEs using Markdown so your code can be used by other humans!",
+    "language": "en",
+    "level": "all",
+    "status": "published",
+    "publishedDateTime": "2017-09-08T15:17:53-0400",
+    "updatedDateTime": "2017-09-08T15:17:53-0400"
+  }
+}
