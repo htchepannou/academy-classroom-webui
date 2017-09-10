@@ -7,8 +7,7 @@
 
 .playlist{
     background: #f1f4f4;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    padding-bottom: 8px;
 }
 .playlist ul{
     margin: 0;

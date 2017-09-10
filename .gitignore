@@ -27,5 +27,6 @@ log/
 logs/
 target/
 **/*.dump
+**/*.log
 application.pid
 application.port
