@@ -5,9 +5,11 @@ Master: [![Build Status](https://travis-ci.org/htchepannou/academy-classroom-web
 # Academy Classroom WebUI
 Web UI for classroom where students attend their courses online.
 
+
 ## Requirements
 - Java 1.8
 - Maven
+
 
 ## Installation
 Clone the code repository locally and build it.
@@ -20,11 +22,13 @@ $ mvn clean install
 
 This will generate the service binary ``target/academy-classroom-webui.jar``
 
+
 ## Run
 ```
 $ java -jar target/academy-classroom-service.jar
 ```
 Navigate to a [sample classroom](http://localhost:8080/classroom/100)
+
 
 ## Links
 - Local Environment
@@ -33,6 +37,7 @@ Navigate to a [sample classroom](http://localhost:8080/classroom/100)
 - Integration Environment
     - [Sample classroom](https://io-tchepannou-a-classroom-web.herokuapp.com/classroom/100)
     - [Service Health](https://io-tchepannou-a-classroom-web.herokuapp.com/health) 
+
 
 ## License
 This project is open source sofware under the [MIT License](https://opensource.org/licenses/MIT)
