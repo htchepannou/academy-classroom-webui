@@ -31,4 +31,5 @@ application:
     UserBackend:
       url: "https://io-tchepannou-a-user-service.herokuapp.com"
   login:
-    url: "https://io-tchepannou-a-login-web.herokuapp.com/login"
+    baseUrl: "https://io-tchepannou-a-login-web.herokuapp.com"
+    url: "${application.login.baseUrl}/login"

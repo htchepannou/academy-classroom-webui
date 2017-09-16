@@ -19,6 +19,11 @@ public class HealthCheckConfiguration {
         return createUrlHealthCheck(url + "/health");
     }
 
+    @Bean
+    HealthIndicator loginHealthCheck(@Value("${application.login.baseUrl}") final String url) {
+        return createUrlHealthCheck(url + "/health");
+    }
+
     private HealthIndicator createUrlHealthCheck(final String url){
         return new UrlHealthCheck(url , 15000);
     }
