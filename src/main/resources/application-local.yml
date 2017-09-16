@@ -1,0 +1,14 @@
+server:
+  port: 28080
+
+application:
+  backend:
+    AcademyBackend:
+      url: "http://localhost:18080"
+    UserBackend:
+      url: "http://localhost:18081"
+  login:
+    url: "http://localhost:28081/login"
+  service:
+    cookieHolder:
+      domain: ".heroku.com"
