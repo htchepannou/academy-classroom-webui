@@ -76,11 +76,26 @@ public class RequiresUserFilterTest {
         verify(chain, never()).doFilter(request, response);
     }
 
-
     @Test
-    public void shouldAcceptToken() throws Exception {
+    public void shouldAcceptTokenFromCookie() throws Exception {
         // Given
         when(accessTokenHolder.get(any())).thenReturn("123");
+        final AuthResponse resp = mock(AuthResponse.class);
+        when(userBackend.findSessionByToken("123")).thenReturn(resp);
+
+        // When
+        filter.doFilter(request, response, chain);
+
+        // Then
+        verify(chain).doFilter(request, response);
+    }
+
+    @Test
+    public void shouldAcceptTokenFromRequest() throws Exception {
+        // Given
+        when(accessTokenHolder.get(any())).thenReturn(null);
+        when(request.getParameter("guid")).thenReturn("123");
+
         final AuthResponse resp = mock(AuthResponse.class);
         when(userBackend.findSessionByToken("123")).thenReturn(resp);
 
