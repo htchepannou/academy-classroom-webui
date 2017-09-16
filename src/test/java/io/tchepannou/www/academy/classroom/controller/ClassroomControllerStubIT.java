@@ -4,7 +4,7 @@ import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
-import io.tchepannou.www.academy.support.jetty.AcademyHandlerStub;
+import io.tchepannou.www.academy.support.jetty.HandlerStub;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -28,10 +28,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest
 @ActiveProfiles(profiles = {"stub"})
 public class ClassroomControllerStubIT {
-    private Server academyServer;
-
-    @Value("${backend.academy.port}")
+    @Value("${application.backend.AcademyBackend.port}")
     private int academyServerPort;
+
+    private Server academyServer;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -46,7 +46,7 @@ public class ClassroomControllerStubIT {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
         academyServer = new Server(academyServerPort);
-        academyServer.setHandler(new AcademyHandlerStub());
+        academyServer.setHandler(new HandlerStub());
         academyServer.start();
     }
 
@@ -95,7 +95,39 @@ public class ClassroomControllerStubIT {
     }
 
     @Test
-    public void shouldOpenSegment() throws Exception {
+    public void shouldOpenTextSegment() throws Exception {
+        // GIVEN
+        final ExtendedModelMap model = new ExtendedModelMap();
+
+        // WHEN
+        controller.index(100, 101, 10102, model);
+
+        // THEN
+        assertThat(model).hasSize(6);
+
+        final CourseModel course = (CourseModel)model.get("course");
+        assertCourse(course);
+
+        final LessonModel lesson = (LessonModel)model.get("lesson");
+        assertLesson(lesson);
+
+        final SegmentModel segment = (SegmentModel)model.get("segment");
+        assertThat(segment.getId()).isEqualTo(10102);
+        assertThat(segment.getVideoId()).isNull();
+        assertThat(segment.getTitle()).isEqualTo("Markdown Syntax");
+        assertThat(segment.getRank()).isEqualTo(2);
+        assertThat(segment.getType()).isEqualTo("text");
+        assertThat(segment.getSummary()).isEqualTo("This is a summary");
+        assertThat(segment.getDescription()).isEqualTo("<p>Hello world</p>\n");
+
+        final List segments = (List)model.get("segments");
+        assertThat(segments).hasSize(13);
+
+        assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10103");
+    }
+
+    @Test
+    public void shouldOpenVideoSegment() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
 

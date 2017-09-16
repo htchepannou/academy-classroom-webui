@@ -1,12 +1,12 @@
 package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.backend.academy.AcademyBackend;
-import io.tchepannou.www.academy.classroom.backend.academy.dto.CourseResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.dto.LessonListResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.dto.LessonResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.dto.SegmentListResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.dto.SegmentResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.dto.VideoResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.SegmentListResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.SegmentResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 @Controller
 public class ClassroomController {
-
     @Autowired
     private AcademyBackend academyBackend;
 
@@ -34,6 +33,7 @@ public class ClassroomController {
 
     @Autowired
     private UrlProvider urlProvider;
+
 
 
     @RequestMapping(value="/classroom/{courseId}")
@@ -86,6 +86,7 @@ public class ClassroomController {
 
 
     //-- Private
+
     protected String getNextUrl(
             final CourseModel course,
             final Integer lessonId,

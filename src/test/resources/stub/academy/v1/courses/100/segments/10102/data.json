@@ -1,0 +1,12 @@
+{
+  "transactionId": "fce7ce95-cb65-4f24-b4df-ddaa65930d66",
+  "transactionDateTime": "2017-09-08T15:45:56-0400",
+  "segment": {
+    "id": 10102,
+    "type": "text",
+    "title": "Markdown Syntax",
+    "rank": 2,
+    "summary": "This is a summary",
+    "description": "Hello world"
+  }
+}

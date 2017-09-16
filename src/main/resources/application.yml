@@ -26,6 +26,11 @@ logging:
     console: "%d Type=%level Logger=%c Thread=%thread %m%n"
     file: "%d Type=%level Logger=%c Thread=%thread %m%n"
 
-backend:
-  academy:
-    url: "https://io-tchepannou-academy-service.herokuapp.com"
+application:
+  backend:
+    AcademyBackend:
+      url: "https://io-tchepannou-academy-service.herokuapp.com"
+    UserBackend:
+      url: "https://io-tchepannou-a-user-service.herokuapp.com"
+  login:
+    url: "https://io-tchepannou-a-login-web.herokuapp.com/login"
