@@ -65,14 +65,24 @@ public class RequiresUserFilter implements Filter {
     }
 
     private boolean shouldLogin(final HttpServletRequest request, final HttpServletResponse response){
-        final String accessToken = accessTokenHolder.get(request);
+        String accessToken = accessTokenHolder.get(request);
+        if (accessToken == null){
+            accessToken = request.getParameter(LoginFilter.PARAM_NAME);
+        }
+
         if (accessToken != null){
             try {
                 userBackend.findSessionByToken(accessToken).getSession();
                 return false;
             } catch(UserException e){
-                LOGGER.warn("Token <{}> not valid", accessToken, e);
+                if (e.getStatusCode() == 404){
+                    LOGGER.info("{} - Access token not found", accessToken, e);
+                } else {
+                    LOGGER.warn("{} Access token no longer valid", accessToken, e);
+                }
             }
+        } else {
+            LOGGER.info("No access token. User should login");
         }
         return true;
 
