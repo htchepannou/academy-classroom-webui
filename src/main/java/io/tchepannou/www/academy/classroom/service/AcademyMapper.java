@@ -7,9 +7,11 @@ import io.tchepannou.www.academy.classroom.backend.academy.CourseDto;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonDto;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.VideoDto;
+import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
+import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,16 @@ public class AcademyMapper {
 
     @Autowired
     private HtmlRenderer markdownHtmlRenderer;
+
+    public SessionModel toSessionModel (final SessionDto dto){
+        final SessionModel model = new SessionModel();
+        model.setId(dto.getId());
+        model.setAccessToken(dto.getAccessToken());
+        model.setAccountId(dto.getAccountId());
+        model.setExpiryDateTime(dto.getExpiryDateTime());
+        model.setRoleId(dto.getRoleId());
+        return model;
+    }
 
     public CourseModel toCourseModel(final CourseDto dto){
         final CourseModel model = new CourseModel();

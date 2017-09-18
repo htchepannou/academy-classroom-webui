@@ -11,20 +11,28 @@ import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
+import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
+import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import io.tchepannou.www.academy.classroom.service.UrlProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
 public class ClassroomController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
+
     @Autowired
     private AcademyBackend academyBackend;
 
@@ -34,6 +42,8 @@ public class ClassroomController {
     @Autowired
     private UrlProvider urlProvider;
 
+    @Autowired
+    private SessionProvider sessionProvider;
 
 
     @RequestMapping(value="/classroom/{courseId}")
@@ -43,7 +53,6 @@ public class ClassroomController {
     ) {
         return index(courseId, null, null, model);
     }
-
 
     @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}")
     public String index(
@@ -72,9 +81,32 @@ public class ClassroomController {
         model.addAttribute("video", video);
 
         // Next URL
-        model.addAttribute("nextUrl", getNextUrl(course, lesson.getId(), segment.getId(), lessons, segments));
-
+        model.addAttribute("nextUrl", String.format("/classroom/%s/%s/%s/done", course.getId(), lesson.getId(), segment.getId()));
         return "classroom";
+    }
+
+    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/done")
+    public String done(
+            @PathVariable final Integer courseId,
+            @PathVariable final Integer lessonId,
+            @PathVariable final Integer segmentId,
+            final HttpServletRequest request
+
+    ){
+        // Event
+        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
+        if (session.isPresent()) {
+            academyBackend.done(session.get().getRoleId(), segmentId);
+        }
+
+        // Next URL
+        final CourseModel course = getCourse(courseId);
+        final List<LessonModel> lessons = loadLessons(course.getId());
+        final List<SegmentModel> segments = loadSegments(courseId, lessonId);
+        final String nextUrl = getNextUrl(course, lessonId, segmentId, lessons, segments);
+
+        LOGGER.info("Redirecting to {}", nextUrl);
+        return "redirect:" + nextUrl;
     }
 
     @RequestMapping(value="/classroom/{courseId}/done")
@@ -86,7 +118,6 @@ public class ClassroomController {
 
 
     //-- Private
-
     protected String getNextUrl(
             final CourseModel course,
             final Integer lessonId,
@@ -114,6 +145,7 @@ public class ClassroomController {
         }
         return "/classroom/" + course.getId() + "/done";
     }
+
 
     private int getIndex(Integer lessonId, List<? extends BaseModel> lessons){
         for (int i=0 ; i<lessons.size() ; i++){

@@ -1,6 +1,6 @@
 package io.tchepannou.www.academy.classroom.servlet;
 
-import io.tchepannou.www.academy.classroom.service.AccessTokenHolder;
+import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class LoginFilterTest {
     @Mock
-    private AccessTokenHolder accessTokenHolder;
+    private SessionProvider sessionProvider;
 
     @Mock
     HttpServletRequest request;
@@ -43,7 +43,7 @@ public class LoginFilterTest {
         filter.doFilter(request, response, chain);
 
         // Then
-        verify(accessTokenHolder).set("123", response);
+        verify(sessionProvider).setAccessToken("123", response);
         verify(chain).doFilter(request, response);
 
     }
@@ -58,7 +58,7 @@ public class LoginFilterTest {
         filter.doFilter(request, response, chain);
 
         // Then
-        verify(accessTokenHolder, never()).set(anyString(), any(HttpServletResponse.class));
+        verify(sessionProvider, never()).setAccessToken(anyString(), any(HttpServletResponse.class));
         verify(chain).doFilter(request, response);
 
     }

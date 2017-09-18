@@ -1,6 +1,6 @@
 package io.tchepannou.www.academy.classroom.servlet;
 
-import io.tchepannou.www.academy.classroom.service.AccessTokenHolder;
+import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class LoginFilter implements Filter {
     public static final String PARAM_NAME = "guid";
 
     @Autowired
-    private AccessTokenHolder accessTokenHolder;
+    private SessionProvider sessionProvider;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -44,8 +44,8 @@ public class LoginFilter implements Filter {
             throws IOException, ServletException {
         String accessToken = request.getParameter(PARAM_NAME);
         if (!StringUtil.isBlank(accessToken)){
-            LOGGER.info("access_token={}. Logging in", accessToken);
-            accessTokenHolder.set(accessToken, response);
+            LOGGER.info("Authenticated");
+            sessionProvider.setAccessToken(accessToken, response);
         }
     }
 }

@@ -1,8 +1,8 @@
 package io.tchepannou.www.academy.classroom.servlet;
 
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
-import io.tchepannou.www.academy.classroom.backend.user.UserException;
-import io.tchepannou.www.academy.classroom.service.AccessTokenHolder;
+import io.tchepannou.www.academy.classroom.model.SessionModel;
+import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Optional;
 
 public class RequiresUserFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequiresUserFilter.class);
@@ -26,7 +27,7 @@ public class RequiresUserFilter implements Filter {
     private UserBackend userBackend;
 
     @Autowired
-    private AccessTokenHolder accessTokenHolder;
+    private SessionProvider sessionProvider;
 
     @Value("${application.login.url}")
     private String loginUrl;
@@ -49,7 +50,8 @@ public class RequiresUserFilter implements Filter {
 
     private void verify(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-        if (shouldLogin(request, response)){
+
+        if (shouldLogin(request)){
             final String qs = request.getQueryString();
 
             final StringBuffer targetUrl = request.getRequestURL();
@@ -58,34 +60,18 @@ public class RequiresUserFilter implements Filter {
             }
             final String doneUrl = URLEncoder.encode(targetUrl.toString(), "utf-8");
             final String url = String.format("%s?done=%s", loginUrl, doneUrl);
+
+            LOGGER.info("UnAuthorized. Redirecting to {}", url);
             response.sendRedirect(url);
         } else {
+            LOGGER.info("Authorized");
             chain.doFilter(request, response);
         }
     }
 
-    private boolean shouldLogin(final HttpServletRequest request, final HttpServletResponse response){
-        String accessToken = accessTokenHolder.get(request);
-        if (accessToken == null){
-            accessToken = request.getParameter(LoginFilter.PARAM_NAME);
-        }
-
-        if (accessToken != null){
-            try {
-                userBackend.findSessionByToken(accessToken).getSession();
-                return false;
-            } catch(UserException e){
-                if (e.getStatusCode() == 404){
-                    LOGGER.info("{} - Access token not found", accessToken, e);
-                } else {
-                    LOGGER.warn("{} Access token no longer valid", accessToken, e);
-                }
-            }
-        } else {
-            LOGGER.info("No access token. User should login");
-        }
-        return true;
-
+    private boolean shouldLogin(final HttpServletRequest request){
+        Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
+        return !session.isPresent();
     }
 
     public String getLoginUrl() {

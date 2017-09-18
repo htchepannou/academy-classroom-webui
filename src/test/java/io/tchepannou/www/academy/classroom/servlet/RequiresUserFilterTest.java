@@ -3,7 +3,7 @@ package io.tchepannou.www.academy.classroom.servlet;
 import io.tchepannou.www.academy.classroom.backend.user.AuthResponse;
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
 import io.tchepannou.www.academy.classroom.backend.user.UserException;
-import io.tchepannou.www.academy.classroom.service.AccessTokenHolder;
+import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ public class RequiresUserFilterTest {
     private UserBackend userBackend;
 
     @Mock
-    private AccessTokenHolder accessTokenHolder;
+    private SessionProvider sessionProvider;
 
     @Mock
     HttpServletRequest request;
@@ -51,7 +51,7 @@ public class RequiresUserFilterTest {
     @Test
     public void shouldRedirectToLoginWhenAccessTokenNotAvailable() throws Exception {
         // Given
-        when(accessTokenHolder.get(any())).thenReturn(null);
+        when(sessionProvider.getAccessToken(any())).thenReturn(null);
 
         // When
         filter.doFilter(request, response, chain);
@@ -64,7 +64,7 @@ public class RequiresUserFilterTest {
     @Test
     public void shouldRedirectToLoginWhenAccessTokenIsInvalid() throws Exception {
         // Given
-        when(accessTokenHolder.get(any())).thenReturn("123");
+        when(sessionProvider.getAccessToken(any())).thenReturn("123");
         final UserException ex = new UserException(409, "foo", new Exception());
         doThrow(ex).when(userBackend).findSessionByToken("123");
 
@@ -79,7 +79,7 @@ public class RequiresUserFilterTest {
     @Test
     public void shouldAcceptTokenFromCookie() throws Exception {
         // Given
-        when(accessTokenHolder.get(any())).thenReturn("123");
+        when(sessionProvider.getAccessToken(any())).thenReturn("123");
         final AuthResponse resp = mock(AuthResponse.class);
         when(userBackend.findSessionByToken("123")).thenReturn(resp);
 
@@ -93,7 +93,7 @@ public class RequiresUserFilterTest {
     @Test
     public void shouldAcceptTokenFromRequest() throws Exception {
         // Given
-        when(accessTokenHolder.get(any())).thenReturn(null);
+        when(sessionProvider.getAccessToken(any())).thenReturn(null);
         when(request.getParameter("guid")).thenReturn("123");
 
         final AuthResponse resp = mock(AuthResponse.class);
