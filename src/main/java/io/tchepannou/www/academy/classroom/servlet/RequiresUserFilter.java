@@ -1,6 +1,5 @@
 package io.tchepannou.www.academy.classroom.servlet;
 
-import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.slf4j.Logger;
@@ -22,9 +21,6 @@ import java.util.Optional;
 
 public class RequiresUserFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequiresUserFilter.class);
-
-    @Autowired
-    private UserBackend userBackend;
 
     @Autowired
     private SessionProvider sessionProvider;
