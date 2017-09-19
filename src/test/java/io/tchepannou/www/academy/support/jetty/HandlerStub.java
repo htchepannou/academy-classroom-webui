@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class HandlerStub extends AbstractHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HandlerStub.class);
 
     private int status = 200;
+    private Cookie cookie;
 
     @Override
     public void handle(
@@ -37,6 +39,10 @@ public class HandlerStub extends AbstractHandler {
         httpServletResponse.getWriter().println(content);
         httpServletResponse.addHeader("Content-Type", "application/json");
         httpServletResponse.setStatus(status);
+        if (cookie != null){
+            httpServletResponse.addCookie(cookie);
+        }
+
         request.setHandled(true);
 
 //        LOGGER.info(content);
@@ -48,5 +54,13 @@ public class HandlerStub extends AbstractHandler {
 
     public void setStatus(final int status) {
         this.status = status;
+    }
+
+    public Cookie getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(final Cookie cookie) {
+        this.cookie = cookie;
     }
 }

@@ -5,6 +5,7 @@ import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.support.jetty.HandlerStub;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
@@ -19,9 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
@@ -30,9 +35,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 public class ClassroomControllerStubIT {
     @Value("${application.backend.AcademyBackend.port}")
     private int academyServerPort;
-
     private Server academyServer;
 
+    @Value("${application.backend.UserBackend.port}")
+    private int userServerPort;
+    private Server userServer;
+    
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -41,18 +49,25 @@ public class ClassroomControllerStubIT {
 
     private MockMvc mockMvc;
 
+    private Server startServer(final int port, final Handler handler) throws Exception{
+        final Server server = new Server(port);
+        server.setHandler(handler);
+        server.start();
+
+        return server;
+    }
     @Before
     public void setUp () throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
-        academyServer = new Server(academyServerPort);
-        academyServer.setHandler(new HandlerStub());
-        academyServer.start();
+        academyServer = startServer(academyServerPort, new HandlerStub());
+        userServer = startServer(userServerPort, new HandlerStub());
     }
 
     @After
     public void tearDown() throws Exception {
         academyServer.stop();
+        userServer.stop();
     }
 
     @Test
@@ -165,45 +180,41 @@ public class ClassroomControllerStubIT {
         assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10112/done");
     }
 
-//    @Test
-//    public void shouldOpenLastSegment() throws Exception {
-//        // GIVEN
-//        final ExtendedModelMap model = new ExtendedModelMap();
-//
-//        // WHEN
-//        controller.index(100, 101, 10113, model);
-//
-//        // THEN
-//        assertThat(model).hasSize(6);
-//
-//        final CourseModel course = (CourseModel)model.get("course");
-//        assertCourse(course);
-//
-//        final LessonModel lesson = (LessonModel)model.get("lesson");
-//        assertLesson(lesson);
-//
-//        final SegmentModel segment = (SegmentModel)model.get("segment");
-//        assertThat(segment.getId()).isEqualTo(10113);
-//        assertThat(segment.getVideoId()).isEqualTo(10113);
-//        assertThat(segment.getTitle()).isEqualTo("Document Everything!");
-//        assertThat(segment.getRank()).isEqualTo(13);
-//        assertThat(segment.getType()).isEqualTo("video");
-//        assertThat(segment.getSummary()).isNull();
-//        assertThat(segment.getDescription()).isNull();
-//
-//        final List segments = (List)model.get("segments");
-//        assertThat(segments).hasSize(13);
-//
-//        final VideoModel video = (VideoModel)model.get("video");
-//        assertThat(video.getId()).isEqualTo(10113);
-//        assertThat(video.getDurationSecond()).isEqualTo(120);
-//        assertThat(video.getEmbedUrl()).isEqualTo("https://www.youtube.com/embed/-YyRDFx3e28");
-//        assertThat(video.getType()).isEqualTo("youtube");
-//        assertThat(video.getVideoId()).isEqualTo("-YyRDFx3e28");
-//
-//        assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/done");
-//    }
-//
+    @Test
+    public void shouldFinishSegment() throws Exception {
+        // GIVEN
+        final ExtendedModelMap model = new ExtendedModelMap();
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getCookies()).thenReturn(new Cookie[]{
+           new Cookie("guid", "12345678901234567890123456789012")
+        });
+
+        // WHEN
+        final String nextUrl = controller.done(100, 101, 10112, request);
+
+        // THEN
+        assertThat(model).isEmpty();
+        assertThat(nextUrl).isEqualTo("redirect:/classroom/100/101/10113");
+    }
+
+
+    @Test
+    public void shouldFinishSegmentEvenIfCannotSendDoneEvent() throws Exception {
+        // GIVEN
+        final ExtendedModelMap model = new ExtendedModelMap();
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getCookies()).thenReturn(new Cookie[]{
+                new Cookie("guid", "999999999")
+        });
+
+        // WHEN
+        final String nextUrl = controller.done(100, 101, 10112, request);
+
+        // THEN
+        assertThat(model).isEmpty();
+        assertThat(nextUrl).isEqualTo("redirect:/classroom/100/101/10113");
+    }
+
     @Test
     public void shouldFinishClassroom() throws Exception {
         // GIVEN

@@ -43,20 +43,6 @@ public class SessionProvider {
         return Optional.empty();
     }
 
-    @Deprecated
-    public String get(final HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null){
-            return null;
-        }
-        for (Cookie cookie : cookies){
-            if (COOKIE_NAME.equals(cookie.getName())){
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
-
     public void setAccessToken(final String accessToken, final HttpServletResponse response){
         response.addCookie(new Cookie(COOKIE_NAME, accessToken));
     }

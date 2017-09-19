@@ -1,0 +1,12 @@
+{
+  "transactionId": "6aeb98f9-34c8-4513-999a-40ce9ce95248",
+  "transactionDateTime": "2017-09-18T09:00:18-0400",
+  "session": {
+    "id": 201,
+    "accountId": 201,
+    "roleId": 1,
+    "accessToken": "12345678901234567890123456789012",
+    "expiryDateTime": "2030-01-02T10:30:00-0500",
+    "active": true
+  }
+}

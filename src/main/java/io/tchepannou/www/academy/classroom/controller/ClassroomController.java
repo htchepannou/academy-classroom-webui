@@ -96,7 +96,11 @@ public class ClassroomController {
         // Event
         final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
         if (session.isPresent()) {
-            academyBackend.done(session.get().getRoleId(), segmentId);
+            try {
+                academyBackend.done(session.get().getRoleId(), segmentId);
+            } catch (Exception e){
+                LOGGER.warn("Unable to send DONE event", e);
+            }
         }
 
         // Next URL
@@ -135,12 +139,12 @@ public class ClassroomController {
             nextSegmentIndex = segmentIndex + 1;
         } else if (lessonIndex+1 < lessons.size()){
             nextLessonIndex = lessonIndex + 1;
-            nextSegmentIndex = 0;
+            nextSegmentIndex = -1;
         }
 
-        if (nextLessonIndex != -1 && nextSegmentIndex != -1){
+        if (nextLessonIndex != -1){
             final Integer nextLessonId = lessons.get(nextLessonIndex).getId();
-            final Integer nextSegmentId = segments.get(nextSegmentIndex).getId();
+            final Integer nextSegmentId = nextSegmentIndex >= 0 ? segments.get(nextSegmentIndex).getId() : null;
             return urlProvider.getSegmentUrl(course.getId(), nextLessonId, nextSegmentId);
         }
         return "/classroom/" + course.getId() + "/done";

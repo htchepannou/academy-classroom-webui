@@ -4,7 +4,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UrlProvider {
-    public String getSegmentUrl(Integer courseId, Integer lessonId, Integer segmentId){
-        return String.format("/classroom/%s/%s/%s", courseId, lessonId, segmentId);
+    public String getSegmentUrl(final Integer courseId, final Integer lessonId, final Integer segmentId){
+        if (segmentId == null){
+            return lessonId == null
+                    ? String.format("/classroom/%s", courseId)
+                    : String.format("/classroom/%s/%s", courseId, lessonId);
+        } else {
+            return String.format("/classroom/%s/%s/%s", courseId, lessonId, segmentId);
+        }
     }
 }
