@@ -49,10 +49,17 @@ public class ClassroomControllerStubIT {
 
     private MockMvc mockMvc;
 
+    private HttpServletRequest request;
+
     private Server startServer(final int port, final Handler handler) throws Exception{
         final Server server = new Server(port);
         server.setHandler(handler);
         server.start();
+
+        request = mock(HttpServletRequest.class);
+        when(request.getCookies()).thenReturn(new Cookie[]{
+                new Cookie("guid", "12345678901234567890123456789012")
+        });
 
         return server;
     }
@@ -76,7 +83,7 @@ public class ClassroomControllerStubIT {
         final ExtendedModelMap model = new ExtendedModelMap();
 
         // WHEN
-        controller.index(100, model);
+        controller.index(100, model, request);
 
         // THEN
         assertThat(model).hasSize(6);
@@ -115,7 +122,7 @@ public class ClassroomControllerStubIT {
         final ExtendedModelMap model = new ExtendedModelMap();
 
         // WHEN
-        controller.index(100, 101, 10102, model);
+        controller.index(100, 101, 10102, model, request);
 
         // THEN
         assertThat(model).hasSize(6);
@@ -147,7 +154,7 @@ public class ClassroomControllerStubIT {
         final ExtendedModelMap model = new ExtendedModelMap();
 
         // WHEN
-        controller.index(100, 101, 10112, model);
+        controller.index(100, 101, 10112, model, request);
 
         // THEN
         assertThat(model).hasSize(6);
@@ -184,10 +191,6 @@ public class ClassroomControllerStubIT {
     public void shouldFinishSegment() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getCookies()).thenReturn(new Cookie[]{
-           new Cookie("guid", "12345678901234567890123456789012")
-        });
 
         // WHEN
         final String nextUrl = controller.done(100, 101, 10112, request);
@@ -197,22 +200,21 @@ public class ClassroomControllerStubIT {
         assertThat(nextUrl).isEqualTo("redirect:/classroom/100/101/10113");
     }
 
-
     @Test
-    public void shouldFinishSegmentEvenIfCannotSendDoneEvent() throws Exception {
+    public void shouldFlagAttendedSegmentsWhenOpeningASegment() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getCookies()).thenReturn(new Cookie[]{
-                new Cookie("guid", "999999999")
-        });
 
         // WHEN
-        final String nextUrl = controller.done(100, 101, 10112, request);
+        controller.index(100, model, request);
 
         // THEN
-        assertThat(model).isEmpty();
-        assertThat(nextUrl).isEqualTo("redirect:/classroom/100/101/10113");
+        final List<SegmentModel> segments = (List)model.get("segments");
+        assertThat(segments).hasSize(13);
+        for (final SegmentModel seg : segments){
+            int id = seg.getId();
+            assertThat(seg.isAttended()).isEqualTo(id == 10101 || id == 10112);
+        }
     }
 
     @Test

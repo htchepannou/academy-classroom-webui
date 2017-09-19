@@ -4,6 +4,8 @@ import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
 import io.tchepannou.www.academy.classroom.backend.user.UserException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
+import io.tchepannou.www.academy.classroom.servlet.LoginFilter;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,11 @@ public class SessionProvider {
     }
 
     public String getAccessToken(final HttpServletRequest request){
+        final String accessToken = request.getParameter(LoginFilter.PARAM_NAME);
+        if (!StringUtils.isEmpty(accessToken)){
+            return accessToken;
+        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies == null){
             return null;

@@ -1,6 +1,8 @@
 package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.backend.academy.AcademyBackend;
+import io.tchepannou.www.academy.classroom.backend.academy.AttendanceResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.CourseAttendanceDto;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
@@ -45,13 +47,13 @@ public class ClassroomController {
     @Autowired
     private SessionProvider sessionProvider;
 
-
     @RequestMapping(value="/classroom/{courseId}")
     public String index(
             @PathVariable final Integer courseId,
-            final Model model
+            final Model model,
+            final HttpServletRequest request
     ) {
-        return index(courseId, null, null, model);
+        return index(courseId, null, null, model, request);
     }
 
     @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}")
@@ -59,7 +61,8 @@ public class ClassroomController {
             @PathVariable final Integer courseId,
             @PathVariable final Integer lessonId,
             @PathVariable final Integer segmentId,
-            final Model model
+            final Model model,
+            final HttpServletRequest request
     ){
         // Course
         final CourseModel course = getCourse(courseId);
@@ -79,6 +82,18 @@ public class ClassroomController {
         // Video
         final VideoModel video = getVideo(segment);
         model.addAttribute("video", video);
+
+        // Attendance
+        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
+        if (session.isPresent()) {
+            try {
+                final Integer studentId = session.get().getRoleId();
+                final AttendanceResponse response = academyBackend.findAttendance(studentId, course.getId());
+                updateAttendance(segments, response.getAttendance());
+            } catch (Exception e){
+                LOGGER.warn("Unable to load the course attendance", e);
+            }
+        }
 
         // Next URL
         model.addAttribute("nextUrl", String.format("/classroom/%s/%s/%s/done", course.getId(), lesson.getId(), segment.getId()));
@@ -150,6 +165,14 @@ public class ClassroomController {
         return "/classroom/" + course.getId() + "/done";
     }
 
+    private void updateAttendance(final List<SegmentModel> segments, final CourseAttendanceDto attendance) {
+        final List<Integer> attendedSegmentId = attendance.getSegments().stream()
+                .map(s -> s.getSegmentId())
+                .collect(Collectors.toList());
+        for (final SegmentModel segment : segments){
+            segment.setAttended(attendedSegmentId.contains(segment.getId()));
+        }
+    }
 
     private int getIndex(Integer lessonId, List<? extends BaseModel> lessons){
         for (int i=0 ; i<lessons.size() ; i++){

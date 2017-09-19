@@ -33,10 +33,16 @@
                 <h4 th:text="${lesson.rank} + '. ' + ${lesson.title}">#</h4>
                 <ul>
                     <li th:each="item:${segments}" th:classappend="${item} == ${segment} ? active : ''">
-                        <a th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
+                        <div th:if="${item.attended}">
+                            <a th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
+                                <span class="rank"  th:text="${item.rank}"></span>
+                                <span class="title" th:text="${item.title}">Segment Title</span>
+                            </a>
+                        </div>
+                        <div th:if="!${item.attended}">
                             <span class="rank"  th:text="${item.rank}"></span>
                             <span class="title" th:text="${item.title}">Segment Title</span>
-                        </a>
+                        </div>
                     </li>
                 </ul>
             </div>

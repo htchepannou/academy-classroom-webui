@@ -8,6 +8,7 @@ public class SegmentModel extends BaseModel {
     private Integer rank;
     private String summary;
     private String description;
+    private boolean attended;
 
     public Integer getVideoId() {
         return videoId;
@@ -55,5 +56,13 @@ public class SegmentModel extends BaseModel {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    public boolean isAttended() {
+        return attended;
+    }
+
+    public void setAttended(final boolean attended) {
+        this.attended = attended;
     }
 }
