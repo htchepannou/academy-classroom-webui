@@ -38,6 +38,11 @@ public class AcademyBackend extends Backend{
         return rest.getForEntity(uri, VideoResponse.class).getBody();
     }
 
+    public void start(final Integer studentId, final Integer segmentId){
+        final String uri = String.format("%s/academy/v1/attendances/students/%s/segments/%s/start", getUrl(), studentId, segmentId);
+        rest.postForLocation(uri, null);
+    }
+
     public void done(final Integer studentId, final Integer segmentId){
         final String uri = String.format("%s/academy/v1/attendances/students/%s/segments/%s/done", getUrl(), studentId, segmentId);
         rest.postForLocation(uri, null);

@@ -35,11 +35,13 @@
                     <li th:each="item:${segments}" th:classappend="${item} == ${segment} ? active : ''">
                         <div th:if="${item.attended}">
                             <a th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
+                                <span class="ok"><i class="glyphicon glyphicon-ok"></i></span>
                                 <span class="rank"  th:text="${item.rank}"></span>
                                 <span class="title" th:text="${item.title}">Segment Title</span>
                             </a>
                         </div>
                         <div th:if="!${item.attended}">
+                            <span class="ok"></span>
                             <span class="rank"  th:text="${item.rank}"></span>
                             <span class="title" th:text="${item.title}">Segment Title</span>
                         </div>

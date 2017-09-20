@@ -26,11 +26,14 @@
     font-weight: 500;
 }
 .playlist li .rank{
-    margin-left: .25em;
     margin-right: .25em;
-    text-align: left;
-    float: left;
     width: 25px;
+    display: inline-block;
+}
+.playlist li .ok{
+    color: darkgreen;
+    display: inline-block;
+    width: 16px;
 }
 .playlist li .rank::after{
     content: ".";

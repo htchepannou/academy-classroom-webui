@@ -1,0 +1,14 @@
+{
+  "transactionId": "5a0bc650-f6e1-4264-8eb5-878f3c409768",
+  "transactionDateTime": "2017-09-08T15:18:53-0400",
+  "course": {
+    "id": 500,
+    "title": "Introduction to SQL",
+    "summary": "Learn how to use SQL",
+    "language": "en",
+    "level": "beginner",
+    "status": "published",
+    "publishedDateTime": "2017-09-08T15:17:53-0400",
+    "updatedDateTime": "2017-09-08T15:17:53-0400"
+  }
+}

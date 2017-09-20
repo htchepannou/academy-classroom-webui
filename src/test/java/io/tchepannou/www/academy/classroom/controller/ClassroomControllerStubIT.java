@@ -63,6 +63,7 @@ public class ClassroomControllerStubIT {
 
         return server;
     }
+
     @Before
     public void setUp () throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
@@ -78,7 +79,23 @@ public class ClassroomControllerStubIT {
     }
 
     @Test
-    public void shouldOpenClassroom() throws Exception {
+    public void shouldOpenClassroomAndLandOnFirstSegment() throws Exception {
+        // GIVEN
+        final ExtendedModelMap model = new ExtendedModelMap();
+
+        // WHEN
+        controller.index(500, model, request);
+
+        // THEN
+        final LessonModel lesson = (LessonModel)model.get("lesson");
+        assertThat(lesson.getId()).isEqualTo(501);
+
+        final SegmentModel segment = (SegmentModel)model.get("segment");
+        assertThat(segment.getId()).isEqualTo(50101);
+    }
+
+    @Test
+    public void shouldOpenClassroomAndLandOnLastSegmentViewed() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
 
@@ -86,34 +103,14 @@ public class ClassroomControllerStubIT {
         controller.index(100, model, request);
 
         // THEN
-        assertThat(model).hasSize(6);
-
-        final CourseModel course = (CourseModel)model.get("course");
-        assertCourse(course);
-
         final LessonModel lesson = (LessonModel)model.get("lesson");
-        assertLesson(lesson);
-
-        final List segments = (List)model.get("segments");
-        assertThat(segments).hasSize(13);
+        assertThat(lesson.getId()).isEqualTo(101);
 
         final SegmentModel segment = (SegmentModel)model.get("segment");
-        assertThat(segment.getId()).isEqualTo(10101);
-        assertThat(segment.getVideoId()).isEqualTo(10101);
-        assertThat(segment.getTitle()).isEqualTo("Welcome");
-        assertThat(segment.getRank()).isEqualTo(1);
-        assertThat(segment.getType()).isEqualTo("video");
-        assertThat(segment.getSummary()).isEqualTo("Welcoming students");
-        assertThat(segment.getDescription()).isEqualTo("<p>First course</p>\n");
+        assertThat(segment.getId()).isEqualTo(10112);
 
         final VideoModel video = (VideoModel)model.get("video");
-        assertThat(video.getId()).isEqualTo(10101);
-        assertThat(video.getDurationSecond()).isEqualTo(52);
-        assertThat(video.getEmbedUrl()).isEqualTo("https://www.youtube.com/embed/zYyRDFx3e28");
-        assertThat(video.getType()).isEqualTo("youtube");
-        assertThat(video.getVideoId()).isEqualTo("zYyRDFx3e28");
-
-        assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10101/done");
+        assertThat(video.getId()).isEqualTo(10112);
     }
 
     @Test
@@ -201,7 +198,7 @@ public class ClassroomControllerStubIT {
     }
 
     @Test
-    public void shouldFlagAttendedSegmentsWhenOpeningASegment() throws Exception {
+    public void shouldFlagAttendedSegments() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
 

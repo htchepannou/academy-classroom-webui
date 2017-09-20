@@ -1,0 +1,13 @@
+{
+  "transactionId": "40565e24-c16a-4594-b6d0-5781ecf08076",
+  "transactionDateTime": "2017-09-08T15:44:19-0400",
+  "segments": [
+    {
+      "id": 50101,
+      "type": "text",
+      "title": "What is SQL",
+      "rank": 1
+    }
+  ],
+  "size": 1
+}

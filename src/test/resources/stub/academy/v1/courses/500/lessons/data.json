@@ -1,0 +1,12 @@
+{
+  "transactionId": "3e2f6bc9-f3c7-4584-a823-f755e3195501",
+  "transactionDateTime": "2017-09-08T15:43:12-0400",
+  "lessons": [
+    {
+      "id": 501,
+      "title": "Using SELECT",
+      "rank": 1
+    }
+  ],
+  "size": 1
+}

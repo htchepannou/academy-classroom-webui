@@ -3,6 +3,7 @@
   "transactionDateTime": "2017-09-08T15:47:35-0400",
   "segment": {
     "id": 10101,
+    "lessonId": 101,
     "videoId": 10101,
     "type": "video",
     "title": "Welcome",

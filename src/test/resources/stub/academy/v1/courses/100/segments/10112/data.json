@@ -3,6 +3,7 @@
   "transactionDateTime": "2017-09-08T15:45:56-0400",
   "segment": {
     "id": 10112,
+    "lessonId": 101,
     "videoId": 10112,
     "type": "video",
     "title": "Markdown Syntax Practice",

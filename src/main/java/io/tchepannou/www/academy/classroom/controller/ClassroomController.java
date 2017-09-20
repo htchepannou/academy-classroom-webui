@@ -6,6 +6,7 @@ import io.tchepannou.www.academy.classroom.backend.academy.CourseAttendanceDto;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
@@ -53,7 +54,26 @@ public class ClassroomController {
             final Model model,
             final HttpServletRequest request
     ) {
-        return index(courseId, null, null, model, request);
+        Integer lessonId = null;
+        Integer segmentId = null;
+
+        /* get current response */
+        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
+        if (session.isPresent()) {
+            try {
+
+                final Integer studentId = session.get().getRoleId();
+                final AttendanceResponse response = academyBackend.findAttendance(studentId, courseId);
+                final SegmentDto segment = academyBackend.findSegmentById(courseId, response.getAttendance().getCurrentSegmentId()).getSegment();
+                segmentId = segment.getId();
+                lessonId = segment.getLessonId();
+
+            } catch (Exception e){
+                LOGGER.warn("Unable to load the course attendance", e);
+            }
+        }
+
+        return index(courseId, lessonId, segmentId, model, request);
     }
 
     @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}")
@@ -97,6 +117,17 @@ public class ClassroomController {
 
         // Next URL
         model.addAttribute("nextUrl", String.format("/classroom/%s/%s/%s/done", course.getId(), lesson.getId(), segment.getId()));
+
+        // Start
+        if (session.isPresent()) {
+            try {
+                final Integer studentId = session.get().getRoleId();
+                academyBackend.start(studentId, segment.getId());
+            } catch (Exception e) {
+                LOGGER.warn("Unable to send event START", e);
+            }
+        }
+
         return "classroom";
     }
 
