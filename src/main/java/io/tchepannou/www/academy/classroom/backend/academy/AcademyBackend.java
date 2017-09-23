@@ -4,6 +4,8 @@ import io.tchepannou.www.academy.classroom.backend.Backend;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @ConfigurationProperties("application.backend.AcademyBackend")
 public class AcademyBackend extends Backend{
@@ -51,5 +53,19 @@ public class AcademyBackend extends Backend{
     public AttendanceResponse findAttendance(final Integer studentId, final Integer courseId){
         final String uri = String.format("%s/academy/v1/attendances/students/%s/courses/%s", getUrl(), studentId, courseId);
         return rest.getForEntity(uri, AttendanceResponse.class).getBody();
+    }
+
+    public QuizResponse findQuizById(final Integer id){
+        final String uri = String.format("%s/academy/v1/quiz/%s", getUrl(), id);
+        return rest.getForEntity(uri, QuizResponse.class).getBody();
+    }
+
+    public QuizValidationResponse validateQuiz(final Integer id, final List<String> values){
+        final QuizValidationRequest request = new QuizValidationRequest();
+        request.setValues(values);
+
+        final String uri = String.format("%s/academy/v1/quiz/%s/validate", getUrl(), id);
+        return rest.postForEntity(uri, request, QuizValidationResponse.class).getBody();
+
     }
 }

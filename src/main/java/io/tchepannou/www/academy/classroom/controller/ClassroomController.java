@@ -6,6 +6,8 @@ import io.tchepannou.www.academy.classroom.backend.academy.CourseAttendanceDto;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.QuizValidationResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentResponse;
@@ -13,6 +15,8 @@ import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
+import io.tchepannou.www.academy.classroom.model.QuizModel;
+import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
@@ -26,8 +30,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -84,6 +90,85 @@ public class ClassroomController {
             final Model model,
             final HttpServletRequest request
     ){
+        final SegmentModel segment = openSegment(courseId, lessonId, segmentId, model, request);
+
+        // Send event
+        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
+        if (session.isPresent()) {
+            try {
+                final Integer studentId = session.get().getRoleId();
+                academyBackend.start(studentId, segment.getId());
+            } catch (Exception e) {
+                LOGGER.warn("Unable to send event START", e);
+            }
+        }
+
+        return "classroom";
+    }
+
+    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/quiz/submit")
+    public @ResponseBody QuizValidationResultModel submit(
+            @PathVariable final Integer courseId,
+            @PathVariable final Integer lessonId,
+            @PathVariable final Integer segmentId,
+            final HttpServletRequest request
+    ){
+        final SegmentDto segment = academyBackend.findSegmentById(courseId, segmentId).getSegment();
+        final String[] values = request.getParameterValues("value");
+        final QuizValidationResponse response = academyBackend.validateQuiz(segment.getQuizId(), Arrays.asList(values));
+
+        final List<LessonModel> lessons = loadLessons(courseId);
+        final List<SegmentModel> segments = loadSegments(courseId, lessonId);
+        final String nextUrl = getNextUrl(courseId, lessonId, segmentId, lessons, segments);
+
+        final QuizValidationResultModel result = new QuizValidationResultModel();
+        result.setValid(response.isValid());
+        result.setNextUrl(nextUrl);
+        return result;
+    }
+
+    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/done")
+    public String done(
+            @PathVariable final Integer courseId,
+            @PathVariable final Integer lessonId,
+            @PathVariable final Integer segmentId,
+            final HttpServletRequest request
+    ){
+        // Event
+        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
+        if (session.isPresent()) {
+            try {
+                academyBackend.done(session.get().getRoleId(), segmentId);
+            } catch (Exception e){
+                LOGGER.warn("Unable to send DONE event", e);
+            }
+        }
+
+        // Next URL
+        final List<LessonModel> lessons = loadLessons(courseId);
+        final List<SegmentModel> segments = loadSegments(courseId, lessonId);
+        final String nextUrl = getNextUrl(courseId, lessonId, segmentId, lessons, segments);
+
+        LOGGER.info("Redirecting to {}", nextUrl);
+        return "redirect:" + nextUrl;
+    }
+
+    @RequestMapping(value="/classroom/{courseId}/done")
+    public String done (@PathVariable final Integer courseId, final Model model){
+        final CourseModel course = getCourse(courseId);
+        model.addAttribute("course", course);
+        return "done";
+    }
+
+
+    //-- Private
+    public SegmentModel openSegment(
+            @PathVariable final Integer courseId,
+            @PathVariable final Integer lessonId,
+            @PathVariable final Integer segmentId,
+            final Model model,
+            final HttpServletRequest request
+    ){
         // Course
         final CourseModel course = getCourse(courseId);
         model.addAttribute("course", course);
@@ -103,6 +188,10 @@ public class ClassroomController {
         final VideoModel video = getVideo(segment);
         model.addAttribute("video", video);
 
+        // Quiz
+        final QuizModel quiz = getQuiz(segment);
+        model.addAttribute("quiz", quiz);
+
         // Attendance
         final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
         if (session.isPresent()) {
@@ -117,59 +206,11 @@ public class ClassroomController {
 
         // Next URL
         model.addAttribute("nextUrl", String.format("/classroom/%s/%s/%s/done", course.getId(), lesson.getId(), segment.getId()));
-
-        // Start
-        if (session.isPresent()) {
-            try {
-                final Integer studentId = session.get().getRoleId();
-                academyBackend.start(studentId, segment.getId());
-            } catch (Exception e) {
-                LOGGER.warn("Unable to send event START", e);
-            }
-        }
-
-        return "classroom";
+        return segment;
     }
 
-    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/done")
-    public String done(
-            @PathVariable final Integer courseId,
-            @PathVariable final Integer lessonId,
-            @PathVariable final Integer segmentId,
-            final HttpServletRequest request
-
-    ){
-        // Event
-        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
-        if (session.isPresent()) {
-            try {
-                academyBackend.done(session.get().getRoleId(), segmentId);
-            } catch (Exception e){
-                LOGGER.warn("Unable to send DONE event", e);
-            }
-        }
-
-        // Next URL
-        final CourseModel course = getCourse(courseId);
-        final List<LessonModel> lessons = loadLessons(course.getId());
-        final List<SegmentModel> segments = loadSegments(courseId, lessonId);
-        final String nextUrl = getNextUrl(course, lessonId, segmentId, lessons, segments);
-
-        LOGGER.info("Redirecting to {}", nextUrl);
-        return "redirect:" + nextUrl;
-    }
-
-    @RequestMapping(value="/classroom/{courseId}/done")
-    public String done (@PathVariable final Integer courseId, final Model model){
-        final CourseModel course = getCourse(courseId);
-        model.addAttribute("course", course);
-        return "done";
-    }
-
-
-    //-- Private
     protected String getNextUrl(
-            final CourseModel course,
+            final Integer courseId,
             final Integer lessonId,
             final Integer segmentId,
             final List<LessonModel> lessons,
@@ -177,9 +218,9 @@ public class ClassroomController {
     ){
         final int lessonIndex = getIndex(lessonId, lessons);
         final int segmentIndex = getIndex(segmentId, segments);
+
         int nextLessonIndex = -1;
         int nextSegmentIndex = -1;
-
         if (segmentIndex+1 < segments.size()){
             nextLessonIndex = lessonIndex;
             nextSegmentIndex = segmentIndex + 1;
@@ -191,9 +232,9 @@ public class ClassroomController {
         if (nextLessonIndex != -1){
             final Integer nextLessonId = lessons.get(nextLessonIndex).getId();
             final Integer nextSegmentId = nextSegmentIndex >= 0 ? segments.get(nextSegmentIndex).getId() : null;
-            return urlProvider.getSegmentUrl(course.getId(), nextLessonId, nextSegmentId);
+            return urlProvider.getSegmentUrl(courseId, nextLessonId, nextSegmentId);
         }
-        return "/classroom/" + course.getId() + "/done";
+        return "/classroom/" + courseId + "/done";
     }
 
     private void updateAttendance(final List<SegmentModel> segments, final CourseAttendanceDto attendance) {
@@ -251,12 +292,30 @@ public class ClassroomController {
     }
 
     private VideoModel getVideo(final SegmentModel segment){
-        final Integer videoId = segment.getVideoId();
+        return getVideo(segment.getVideoId());
+    }
+    private VideoModel getVideo(final Integer videoId){
         if (videoId == null){
             return null;
         }
 
         final VideoResponse videoResponse = academyBackend.findVideoById(videoId);
         return academyMapper.toVideoModel(videoResponse.getVideo());
+    }
+
+    private QuizModel getQuiz(final SegmentModel segment){
+        final Integer quizId = segment.getQuizId();
+        if (quizId == null){
+            return null;
+        }
+
+        final QuizResponse response = academyBackend.findQuizById(quizId);
+        final QuizModel quiz =  academyMapper.toQuizModel(response.getQuiz());
+        quiz.setChoices(
+                response.getQuiz().getChoices().stream()
+                    .map(s -> academyMapper.toQuizChoiceModel(s))
+                    .collect(Collectors.toList())
+        );
+        return quiz;
     }
 }

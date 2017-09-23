@@ -9,36 +9,23 @@
     <meta name="og:title" th:attr="content=${course.title}"/>
     <meta name="og:description" th:attr="content=${course.summary}"/>
 
-    <link rel="stylesheet" href='/static/lib/bootstrap/3.3.7/css/bootstrap.min.css"'/>
-    <link rel="stylesheet" href='/static/lib/academy/css/academy.css"'/>
+    <div th:replace="fragments/layout :: head"></div>
 </head>
 <body>
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                T-Academy
-            </a>
+    <nav class="navbar navbar-default" th:replace="fragments/layout :: topnav">
+        NAVIGATION
+    </nav>
+
+    <div class="container">
+        <h1 th:text="${course.title}">Title</h1>
+
+        <div class="jumbotron">
+            <h2 th:text="#{page.done.title}">Congratulation!</h2>
+            <p th:text="#{page.done.text}">You have completed the course</p>
         </div>
+
     </div>
-</nav>
-
-<div class="container">
-    <h1 th:text="${course.title}">Title</h1>
-
-    <div class="jumbotron">
-        <h2 th:text="#{congratulation.title}">Congratulation!</h2>
-        <p th:text="#{congratulation.text}">You have completed the course</p>
-    </div>
-
-</div>
-
-
-
-<!-- Optional JavaScript -->
-<script src="/static/lib/jquery/3.2.1/js/jquery-3.2.1.min.js"></script>
-<script src="/static/lib/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </body>
 </html>

@@ -55,17 +55,17 @@ public class ClassroomControllerTest {
     @Test
     public void getNextUrl() throws Exception {
         // When
-        assertThat(controller.getNextUrl(course, 1, 11, lessons, segments)).isEqualTo("/classroom/1/1/12");
-        assertThat(controller.getNextUrl(course, 1, 12, lessons, segments)).isEqualTo("/classroom/1/1/13");
-        assertThat(controller.getNextUrl(course, 1, 13, lessons, segments)).isEqualTo("/classroom/1/2/");
+        assertThat(controller.getNextUrl(course.getId(), 1, 11, lessons, segments)).isEqualTo("/classroom/1/1/12");
+        assertThat(controller.getNextUrl(course.getId(), 1, 12, lessons, segments)).isEqualTo("/classroom/1/1/13");
+        assertThat(controller.getNextUrl(course.getId(), 1, 13, lessons, segments)).isEqualTo("/classroom/1/2/");
     }
 
     @Test
     public void getNextUrlLastLesson() throws Exception {
         // When
-        assertThat(controller.getNextUrl(course, 3, 11, lessons, segments)).isEqualTo("/classroom/1/3/12");
-        assertThat(controller.getNextUrl(course, 3, 12, lessons, segments)).isEqualTo("/classroom/1/3/13");
-        assertThat(controller.getNextUrl(course, 3, 13, lessons, segments)).isEqualTo("/classroom/1/done");
+        assertThat(controller.getNextUrl(course.getId(), 3, 11, lessons, segments)).isEqualTo("/classroom/1/3/12");
+        assertThat(controller.getNextUrl(course.getId(), 3, 12, lessons, segments)).isEqualTo("/classroom/1/3/13");
+        assertThat(controller.getNextUrl(course.getId(), 3, 13, lessons, segments)).isEqualTo("/classroom/1/done");
     }
 
     private CourseModel createCourse(int id){

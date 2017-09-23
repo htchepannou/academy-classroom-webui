@@ -5,11 +5,15 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseDto;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonDto;
+import io.tchepannou.www.academy.classroom.backend.academy.QuizChoiceDto;
+import io.tchepannou.www.academy.classroom.backend.academy.QuizDto;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.VideoDto;
 import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
+import io.tchepannou.www.academy.classroom.model.QuizChoiceModel;
+import io.tchepannou.www.academy.classroom.model.QuizModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
@@ -70,6 +74,7 @@ public class AcademyMapper {
         model.setTitle(dto.getTitle());
         model.setType(dto.getType());
         model.setVideoId(dto.getVideoId());
+        model.setQuizId(dto.getQuizId());
         return model;
     }
 
@@ -87,6 +92,23 @@ public class AcademyMapper {
         return model;
     }
 
+    public QuizModel toQuizModel(final QuizDto dto){
+        final QuizModel model = new QuizModel();
+        model.setAnswer(dto.getAnswer());
+        model.setDescription(markdown2Html(dto.getDescription()));
+        model.setId(dto.getId());
+        model.setQuestion(dto.getQuestion());
+        model.setType(dto.getType());
+        return model;
+    }
+
+    public QuizChoiceModel toQuizChoiceModel(final QuizChoiceDto dto){
+        final QuizChoiceModel model = new QuizChoiceModel();
+        model.setId(dto.getId());
+        model.setAnswer(dto.isAnswer());
+        model.setText(dto.getText());
+        return model;
+    }
     private String markdown2Html(final String text){
         if (StringUtils.isEmpty(text)){
             return null;

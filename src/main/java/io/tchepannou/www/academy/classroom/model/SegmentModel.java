@@ -3,6 +3,7 @@ package io.tchepannou.www.academy.classroom.model;
 @SuppressWarnings("CPD-START")
 public class SegmentModel extends BaseModel {
     private Integer videoId;
+    private Integer quizId;
     private String type;
     private String title;
     private Integer rank;
@@ -64,5 +65,13 @@ public class SegmentModel extends BaseModel {
 
     public void setAttended(final boolean attended) {
         this.attended = attended;
+    }
+
+    public Integer getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(final Integer quizId) {
+        this.quizId = quizId;
     }
 }
