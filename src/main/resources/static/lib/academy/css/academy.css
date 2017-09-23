@@ -44,3 +44,9 @@ h3.segment-title {
     border-bottom: 1px solid gray;
 }
 
+#quizform ul li {
+    list-style: none;
+    top: 12px;
+    margin-bottom: 12px;
+    margin-left: 0;
+}
