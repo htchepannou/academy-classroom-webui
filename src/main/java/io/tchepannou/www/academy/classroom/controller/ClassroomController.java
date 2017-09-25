@@ -7,7 +7,7 @@ import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.QuizValidationResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.QuizAnswerResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentResponse;
@@ -106,8 +106,8 @@ public class ClassroomController {
         return "classroom";
     }
 
-    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/quiz/submit")
-    public @ResponseBody QuizValidationResultModel submit(
+    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/quiz/answer")
+    public @ResponseBody QuizValidationResultModel answer(
             @PathVariable final Integer courseId,
             @PathVariable final Integer lessonId,
             @PathVariable final Integer segmentId,
@@ -115,7 +115,7 @@ public class ClassroomController {
     ){
         final SegmentDto segment = academyBackend.findSegmentById(courseId, segmentId).getSegment();
         final String[] values = request.getParameterValues("value");
-        final QuizValidationResponse response = academyBackend.validateQuiz(segment.getQuizId(), Arrays.asList(values));
+        final QuizAnswerResponse response = academyBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
 
         final QuizValidationResultModel result = new QuizValidationResultModel();
         result.setValid(response.isValid());

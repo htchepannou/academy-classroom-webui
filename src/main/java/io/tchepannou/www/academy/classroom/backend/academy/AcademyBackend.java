@@ -60,12 +60,12 @@ public class AcademyBackend extends Backend{
         return rest.getForEntity(uri, QuizResponse.class).getBody();
     }
 
-    public QuizValidationResponse validateQuiz(final Integer id, final List<String> values){
-        final QuizValidationRequest request = new QuizValidationRequest();
+    public QuizAnswerResponse answerQuiz(final Integer id, final List<String> values){
+        final QuizAnswerRequest request = new QuizAnswerRequest();
         request.setValues(values);
 
-        final String uri = String.format("%s/academy/v1/quiz/%s/validate", getUrl(), id);
-        return rest.postForEntity(uri, request, QuizValidationResponse.class).getBody();
+        final String uri = String.format("%s/academy/v1/quiz/%s/answer", getUrl(), id);
+        return rest.postForEntity(uri, request, QuizAnswerResponse.class).getBody();
 
     }
 }

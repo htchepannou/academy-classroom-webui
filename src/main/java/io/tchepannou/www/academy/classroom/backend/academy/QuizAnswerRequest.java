@@ -3,7 +3,7 @@ package io.tchepannou.www.academy.classroom.backend.academy;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class QuizValidationRequest {
+public class QuizAnswerRequest {
     @NotNull
     public List<String> values;
 

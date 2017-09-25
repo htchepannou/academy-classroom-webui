@@ -50,3 +50,12 @@ h3.segment-title {
     margin-bottom: 2em;
     margin-left: 0;
 }
+
+#quizform textarea {
+    width: 100%;
+}
+
+.modal-dialog .modal-header,
+.modal-dialog .modal-body{
+    text-align: center;
+}

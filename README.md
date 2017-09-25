@@ -23,20 +23,32 @@ $ mvn clean install
 This will generate the service binary ``target/academy-classroom-webui.jar``
 
 
-## Run
+## Quick Run
+- Run the service with default profile (The service will run on port `8080`).
+
 ```
 $ java -jar target/academy-classroom-service.jar
 ```
-Navigate to a [sample classroom](http://localhost:8080/classroom/100)
+- Check the status of the service at [http://localhost:8080/health](http://localhost:8080/health). The status should be `UP`.
+- Open a [sample classroom](http://localhost:8080/classroom/100)
 
 
-## Links
-- Local Environment
-    - [Service Health](http://localhost:8080/health) 
 
-- Integration Environment
-    - [Sample classroom](https://io-tchepannou-a-classroom-web.herokuapp.com/classroom/100)
-    - [Service Health](https://io-tchepannou-a-classroom-web.herokuapp.com/health) 
+## Run the service locally
+If you want to run the service and all its downstream locally:
+
+- Run the dependent services using `local` profile:
+  - `academy-service`: See instructions [here](https://github.com/htchepannou/academy-service#run-the-server-locally)
+  - `academy-login-webui`: See instructions [here](https://github.com/htchepannou/academy-login-webui#run-the-service-locally)
+- Run the service using `local` profile (The service will run on port `vvvdvvdfcticiivgverkvktueheivekvttjnjfflikiv
+28080`):
+```
+$ java -Dspring.profiles.active=local -jar target/academy-classroom-webui.jar
+```
+- Check the status of the service at [http://localhost:28080/health](http://localhost:28080/health). The status should be `UP`.
+- Open a [sample classroom](http://localhost:28080/classroom/100)
+
+
 
 
 ## License

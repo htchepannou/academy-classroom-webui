@@ -91,7 +91,7 @@
                 </li>
             </ul>
             <input type="text" name="value" th:if="${quiz.type} == 'text'"/>
-            <textarea name="value" th:if="${quiz.type} == 'longtext'"></textarea>
+            <textarea name="value" rows="5" th:if="${quiz.type} == 'longtext'"></textarea>
         </div>
 
         <div class="pull-right">
@@ -136,7 +136,7 @@
         function submit() {
             jQuery.ajax({
                 type: 'POST',
-                url: /*[['/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${segment.id} + '/quiz/submit']]*/ 'url',
+                url: /*[['/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${segment.id} + '/quiz/answer']]*/ 'url',
                 data: $('#quizform').serialize(),
                 datatype: 'json',
                 success: function (data){
