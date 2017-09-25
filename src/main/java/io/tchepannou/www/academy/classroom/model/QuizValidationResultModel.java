@@ -2,7 +2,7 @@ package io.tchepannou.www.academy.classroom.model;
 
 public class QuizValidationResultModel {
     private boolean valid;
-    private String nextUrl;
+    private String message;
 
     public boolean isValid() {
         return valid;
@@ -12,11 +12,11 @@ public class QuizValidationResultModel {
         this.valid = valid;
     }
 
-    public String getNextUrl() {
-        return nextUrl;
+    public String getMessage() {
+        return message;
     }
 
-    public void setNextUrl(final String nextUrl) {
-        this.nextUrl = nextUrl;
+    public void setMessage(final String message) {
+        this.message = message;
     }
 }

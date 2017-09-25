@@ -82,7 +82,7 @@
         <div class="markdown" th:utext="${quiz.description}">Description here...</div>
 
         <div class="quiz-answer">
-            <ul th:if="${quiz.type} != 'singlechoice' || ${quiz.type} != 'multichoice'">
+            <ul th:if="${quiz.type} == 'singlechoice' OR ${quiz.type} == 'multichoice'">
                 <li th:each="choice:${quiz.choices}">
                     <input type="radio" name="value" th:if="${quiz.type} == 'singlechoice'" th:attr="value=${choice.id}"/>
                     <input type="checkbox" name="value" th:if="${quiz.type} == 'multichoice'"  th:attr="value=${choice.id}"/>
@@ -108,7 +108,6 @@
                     <h4 class="modal-title" th:text="#{modal.quiz.success.title}"></h4>
                 </div>
                 <div class="modal-body"></div>
-                </div>
                 <div class="modal-footer">
                     <a type="button" class="btn btn-primary" th:text="#{button.continue}" th:attr="href=${nextUrl}"></a>
                 </div>
@@ -125,7 +124,6 @@
                     <h4 class="modal-title" th:text="#{modal.quiz.failure.title}"></h4>
                 </div>
                 <div class="modal-body"></div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.try_again}"></button>
                 </div>

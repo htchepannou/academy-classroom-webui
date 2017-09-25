@@ -117,13 +117,9 @@ public class ClassroomController {
         final String[] values = request.getParameterValues("value");
         final QuizValidationResponse response = academyBackend.validateQuiz(segment.getQuizId(), Arrays.asList(values));
 
-        final List<LessonModel> lessons = loadLessons(courseId);
-        final List<SegmentModel> segments = loadSegments(courseId, lessonId);
-        final String nextUrl = getNextUrl(courseId, lessonId, segmentId, lessons, segments);
-
         final QuizValidationResultModel result = new QuizValidationResultModel();
         result.setValid(response.isValid());
-        result.setNextUrl(nextUrl);
+        result.setMessage(response.getMessage());
         return result;
     }
 
