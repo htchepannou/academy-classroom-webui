@@ -9,7 +9,8 @@ public class QuizModel {
     private String question;
     private String description;
     private String answer;
-    private VideoModel video;
+    private String successMessage;
+    private String failureMessage;
     private List<QuizChoiceModel> choices;
 
     public Integer getId() {
@@ -26,14 +27,6 @@ public class QuizModel {
 
     public void setType(final String type) {
         this.type = type;
-    }
-
-    public VideoModel getVideo() {
-        return video;
-    }
-
-    public void setVideo(final VideoModel video) {
-        this.video = video;
     }
 
     public String getQuestion() {
@@ -66,5 +59,21 @@ public class QuizModel {
 
     public void setChoices(final List<QuizChoiceModel> choices) {
         this.choices = choices;
+    }
+
+    public String getSuccessMessage() {
+        return successMessage;
+    }
+
+    public void setSuccessMessage(final String successMessage) {
+        this.successMessage = successMessage;
+    }
+
+    public String getFailureMessage() {
+        return failureMessage;
+    }
+
+    public void setFailureMessage(final String failureMessage) {
+        this.failureMessage = failureMessage;
     }
 }

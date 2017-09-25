@@ -65,6 +65,7 @@
     {
       "id": 10111,
       "type": "quiz",
+      "quizId": 10111,
       "title": "Readable READMEs with Markdown",
       "rank": 11
     },

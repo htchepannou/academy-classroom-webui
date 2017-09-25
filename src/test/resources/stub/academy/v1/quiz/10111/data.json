@@ -1,0 +1,32 @@
+{
+  "transactionId": "d16916ca-4118-4743-98e2-19fe4252d040",
+  "transactionDateTime": "2017-09-24T18:15:08-0400",
+  "quiz": {
+    "id": 10111,
+    "type": "multichoice",
+    "question": "Who might be a potential end user of documentation?",
+    "description": "This is the description",
+    "successMessage": "Awesome",
+    "failureMessage": "Looser",
+    "choices": [
+      {
+        "id": 101031,
+        "rank": 1,
+        "text": "You",
+        "answer": false
+      },
+      {
+        "id": 101032,
+        "rank": 2,
+        "text": "Your coworkers",
+        "answer": true
+      },
+      {
+        "id": 101033,
+        "rank": 3,
+        "text": "Your users",
+        "answer": true
+      }
+    ]
+  }
+}

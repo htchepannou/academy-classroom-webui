@@ -42,16 +42,17 @@
 </div>
 
 <div th:fragment="video">
-    <div id="video-player"></div>
+    <div class="embed-responsive embed-responsive-16by9">
+        <div id="video-player" class="embed-responsive-item"></div>
+    </div>
     <div class="markdown" th:utext="${segment.description}">Description here...</div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script th:inline="javascript" th:if="${video} != null">
+    <script th:inline="javascript">
         //<![CDATA[
 
         var player;
         function onYouTubeIframeAPIReady() {
-            console.log('onYouTubeIframeAPIReady()');
             player = new YT.Player( 'video-player', {
                 width: 750,
                 height: 500,
@@ -70,7 +71,6 @@
                     }
                 }
             });
-            console.log('player', player);
         }
         //]]>
     </script>
@@ -82,7 +82,7 @@
         <div class="markdown" th:utext="${quiz.description}">Description here...</div>
 
         <div class="quiz-answer">
-            <ul th:if="${quiz.type} != 'text'">
+            <ul th:if="${quiz.type} != 'singlechoice' || ${quiz.type} != 'multichoice'">
                 <li th:each="choice:${quiz.choices}">
                     <input type="radio" name="value" th:if="${quiz.type} == 'singlechoice'" th:attr="value=${choice.id}"/>
                     <input type="checkbox" name="value" th:if="${quiz.type} == 'multichoice'"  th:attr="value=${choice.id}"/>
@@ -91,6 +91,7 @@
                 </li>
             </ul>
             <input type="text" name="value" th:if="${quiz.type} == 'text'"/>
+            <textarea name="value" th:if="${quiz.type} == 'longtext'"></textarea>
         </div>
 
         <div class="pull-right">
@@ -106,7 +107,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" th:text="#{modal.quiz.success.title}"></h4>
                 </div>
-                <div class="modal-body" th:text="#{modal.quiz.success.body}">
+                <div class="modal-body"></div>
                 </div>
                 <div class="modal-footer">
                     <a type="button" class="btn btn-primary" th:text="#{button.continue}" th:attr="href=${nextUrl}"></a>
@@ -123,7 +124,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" th:text="#{modal.quiz.failure.title}"></h4>
                 </div>
-                <div class="modal-body" th:text="#{modal.quiz.failure.body}">
+                <div class="modal-body"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.try_again}"></button>
@@ -143,8 +144,10 @@
                 success: function (data){
                     console.log('result', data);
                     if (data.valid){
+                        $('#modal_success .modal-body').text(data.message);
                         $('#modal_success').modal();
                     } else {
+                        $('#modal_failure .modal-body').text(data.message);
                         $('#modal_failure').modal();
                     }
                 }

@@ -186,11 +186,15 @@ public class ClassroomController {
 
         // Video
         final VideoModel video = getVideo(segment);
-        model.addAttribute("video", video);
+        if (video != null) {
+            model.addAttribute("video", video);
+        }
 
         // Quiz
         final QuizModel quiz = getQuiz(segment);
-        model.addAttribute("quiz", quiz);
+        if (quiz != null) {
+            model.addAttribute("quiz", quiz);
+        }
 
         // Attendance
         final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
@@ -294,6 +298,7 @@ public class ClassroomController {
     private VideoModel getVideo(final SegmentModel segment){
         return getVideo(segment.getVideoId());
     }
+
     private VideoModel getVideo(final Integer videoId){
         if (videoId == null){
             return null;

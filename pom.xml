@@ -33,8 +33,8 @@
         <mockito.version>1.9.5</mockito.version>
 
         <jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
-        <jacoco.threshold.line>0.90</jacoco.threshold.line>
-        <jacoco.threshold.class>0.90</jacoco.threshold.class>
+        <jacoco.threshold.line>0.85</jacoco.threshold.line>
+        <jacoco.threshold.class>0.85</jacoco.threshold.class>
         <maven-failsafe-plugin>2.19.1</maven-failsafe-plugin>
         <maven-pmd-plugin.version>3.7</maven-pmd-plugin.version>
         <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>

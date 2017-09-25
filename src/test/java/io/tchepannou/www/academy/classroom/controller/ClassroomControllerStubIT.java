@@ -2,6 +2,7 @@ package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
+import io.tchepannou.www.academy.classroom.model.QuizModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.support.jetty.HandlerStub;
@@ -122,7 +123,7 @@ public class ClassroomControllerStubIT {
         controller.index(100, 101, 10102, model, request);
 
         // THEN
-        assertThat(model).hasSize(6);
+        assertThat(model).hasSize(5);
 
         final CourseModel course = (CourseModel)model.get("course");
         assertCourse(course);
@@ -182,6 +183,46 @@ public class ClassroomControllerStubIT {
         assertThat(video.getVideoId()).isEqualTo("+YyRDFx3e28");
 
         assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10112/done");
+    }
+
+    @Test
+    public void shouldOpenQuizSegment() throws Exception {
+        // GIVEN
+        final ExtendedModelMap model = new ExtendedModelMap();
+
+        // WHEN
+        controller.index(100, 101, 10111, model, request);
+
+        // THEN
+        assertThat(model).hasSize(6);
+
+        final CourseModel course = (CourseModel)model.get("course");
+        assertCourse(course);
+
+        final LessonModel lesson = (LessonModel)model.get("lesson");
+        assertLesson(lesson);
+
+        final SegmentModel segment = (SegmentModel)model.get("segment");
+        assertThat(segment.getId()).isEqualTo(10111);
+        assertThat(segment.getTitle()).isEqualTo("Readable READMEs with Markdown");
+        assertThat(segment.getRank()).isEqualTo(11);
+        assertThat(segment.getType()).isEqualTo("quiz");
+        assertThat(segment.getSummary()).isNull();
+        assertThat(segment.getDescription()).isNull();
+
+        final List segments = (List)model.get("segments");
+        assertThat(segments).hasSize(13);
+
+        final QuizModel quiz = (QuizModel)model.get("quiz");
+        assertThat(quiz.getId()).isEqualTo(10111);
+        assertThat(quiz.getType()).isEqualTo("multichoice");
+        assertThat(quiz.getQuestion()).isEqualTo("Who might be a potential end user of documentation?");
+        assertThat(quiz.getDescription()).isEqualTo("<p>This is the description</p>\n");
+        assertThat(quiz.getSuccessMessage()).isEqualTo("Awesome");
+        assertThat(quiz.getFailureMessage()).isEqualTo("Looser");
+        assertThat(quiz.getChoices()).hasSize(3);
+
+        assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10111/done");
     }
 
     @Test

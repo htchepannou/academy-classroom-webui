@@ -99,6 +99,8 @@ public class AcademyMapper {
         model.setId(dto.getId());
         model.setQuestion(dto.getQuestion());
         model.setType(dto.getType());
+        model.setSuccessMessage(dto.getSuccessMessage());
+        model.setFailureMessage(dto.getFailureMessage());
         return model;
     }
 

@@ -10,6 +10,8 @@ public class QuizDto {
     private String question;
     private String description;
     private String answer;
+    private String successMessage;
+    private String failureMessage;
     private List<QuizChoiceDto> choices;
 
     public Integer getId() {
@@ -58,6 +60,22 @@ public class QuizDto {
 
     public void setAnswer(final String answer) {
         this.answer = answer;
+    }
+
+    public String getSuccessMessage() {
+        return successMessage;
+    }
+
+    public void setSuccessMessage(final String successMessage) {
+        this.successMessage = successMessage;
+    }
+
+    public String getFailureMessage() {
+        return failureMessage;
+    }
+
+    public void setFailureMessage(final String failureMessage) {
+        this.failureMessage = failureMessage;
     }
 
     public List<QuizChoiceDto> getChoices() {
