@@ -5,16 +5,13 @@
     height: 400px;
 }
 
-h1.title {
+.title {
     margin-top: 0px;
 }
 
 .playlist{
     background: #f1f4f4;
     padding: 1em;
-}
-.playlist .title {
-    margin-top: 0;
 }
 
 .playlist ul{
