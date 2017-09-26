@@ -35,9 +35,9 @@
 </div>
 
 <div th:fragment="text">
-    <h2 th:text="${segment.title}">Segment Title</h2>
+    <h2 class="title" th:text="${segment.title}">Segment Title</h2>
     <div class="markdown" th:utext="${segment.description}">Description here...</div>
-    <div class="pull-right">
+    <div class="toolbar">
         <a class="btn btn-primary" th:attr="href=${nextUrl}" th:text="#{button.continue}">...</a>
     </div>
 </div>
