@@ -15,7 +15,7 @@
 <body>
 
 <div class="playlist" th:fragment="playlist">
-    <h4 th:text="${lesson.rank} + '. ' + ${lesson.title}">#</h4>
+    <h4 class="title" th:text="${lesson.rank} + '. ' + ${lesson.title}">#</h4>
     <ul>
         <li th:each="item:${segments}" th:classappend="${item} == ${segment} ? active : ''">
             <div th:if="${item.attended}">
@@ -35,6 +35,7 @@
 </div>
 
 <div th:fragment="text">
+    <h2 th:text="${segment.title}">Segment Title</h2>
     <div class="markdown" th:utext="${segment.description}">Description here...</div>
     <div class="pull-right">
         <a class="btn btn-primary" th:attr="href=${nextUrl}" th:text="#{button.continue}">...</a>
@@ -45,7 +46,14 @@
     <div class="embed-responsive embed-responsive-16by9">
         <div id="video-player" class="embed-responsive-item"></div>
     </div>
-    <div class="markdown" th:utext="${segment.description}">Description here...</div>
+    <div class="toolbar">
+        <a class="btn btn-default" th:text="#{button.next}" th:attr="href=${nextUrl}">...</a>
+    </div>
+
+    <h2 class="title" th:text="${segment.title}">Segment Title</h2>
+    <div class="notes">
+        <div class="markdown" th:utext="${segment.description}">Description here...</div>
+    </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script th:inline="javascript">
@@ -78,26 +86,38 @@
 
 <div th:fragment="quiz">
     <form id="quizform">
-        <h3 class="quiz-question" th:text="${quiz.question}">Question Here</h3>
-        <div class="markdown" th:utext="${quiz.description}">Description here...</div>
+        <div class="quiz">
+            <h3 class="question" th:text="${quiz.question}">Question Here</h3>
+            <div class="markdown description" th:utext="${quiz.description}" th:if="${quiz.description}">Description here...</div>
 
-        <div class="quiz-answer">
-            <ul th:if="${quiz.type} == 'singlechoice' OR ${quiz.type} == 'multichoice'">
-                <li th:each="choice:${quiz.choices}">
-                    <input type="radio" name="value" th:if="${quiz.type} == 'singlechoice'" th:attr="value=${choice.id}"/>
-                    <input type="checkbox" name="value" th:if="${quiz.type} == 'multichoice'"  th:attr="value=${choice.id}"/>
+            <div class="answers">
+                <ul th:if="${quiz.type} == 'singlechoice' OR ${quiz.type} == 'multichoice'">
+                    <li th:each="choice:${quiz.choices}">
+                        <input type="radio" name="value" th:if="${quiz.type} == 'singlechoice'" th:attr="value=${choice.id}"/>
+                        <input type="checkbox" name="value" th:if="${quiz.type} == 'multichoice'"  th:attr="value=${choice.id}"/>
 
-                    <span th:text="${choice.text}">Choice Text</span>
-                </li>
-            </ul>
-            <input type="text" name="value" th:if="${quiz.type} == 'text'"/>
-            <textarea name="value" rows="5" th:if="${quiz.type} == 'longtext'"></textarea>
+                        <span th:text="${choice.text}" class="answer">Choice Text</span>
+                    </li>
+                </ul>
+                <input type="text" name="value" th:if="${quiz.type} == 'text'"/>
+                <textarea name="value" rows="5" th:if="${quiz.type} == 'longtext'"></textarea>
+            </div>
         </div>
 
-        <div class="pull-right">
+        <div class="toolbar">
             <a class="btn btn-primary" th:text="#{button.submit_answer}" onclick="submit()">...</a>
+            <a class="btn btn-default" th:text="#{button.skip_quiz}" th:attr="href=${nextUrl}">...</a>
+        </div>
+
+        <h2 class="title" th:text="${segment.title}">Segment Title</h2>
+        <div class="notes">
+            <div class="markdown" th:utext="${segment.description}">Description here...</div>
         </div>
     </form>
+
+    <div class="notes">
+        <div class="markdown" th:utext="${segment.description}">Description here...</div>
+    </div>
 
     <!-- Success -->
     <div class="modal fade" id="modal_success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -125,7 +145,7 @@
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.try_again}"></button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{button.try_again}"></button>
                 </div>
             </div>
         </div>

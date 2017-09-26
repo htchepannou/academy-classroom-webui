@@ -5,10 +5,18 @@
     height: 400px;
 }
 
+h1.title {
+    margin-top: 0px;
+}
+
 .playlist{
     background: #f1f4f4;
-    padding-bottom: 8px;
+    padding: 1em;
 }
+.playlist .title {
+    margin-top: 0;
+}
+
 .playlist ul{
     margin: 0;
     padding: 0;
@@ -25,6 +33,9 @@
     background: #fff;
     font-weight: 500;
 }
+.playlist li a:hover {
+    text-decoration: none;
+}
 .playlist li .rank{
     margin-right: .25em;
     width: 25px;
@@ -39,19 +50,50 @@
     content: ".";
 }
 
-h3.segment-title {
-    margin-top: 0;
-    border-bottom: 1px solid gray;
+.notes {
+    margin: 1em 0;
 }
 
-#quizform ul li {
+.toolbar{
+    display: flex;
+    justify-content: flex-end;
+    margin: .5em 0;
+    padding: .5em 0;
+    border-bottom: 1px solid #e7e7e7;
+}
+.toolbar .btn{
+    margin-left: .5em;
+}
+
+.quiz {
+    padding: 3em;
+    border: 1px solid #e7e7e7;
+}
+.quiz .question {
+    text-align: center;
+    margin-top: 0px;
+}
+.quiz .description {
+    padding: 1em;
+    background: lightgray;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.quiz .answer {
+    margin-left: 1em;
+}
+
+.quiz ul {
+    margin-left: 0;
+}
+.quiz ul li {
     list-style: none;
     margin-top: 2em;
     margin-bottom: 2em;
     margin-left: 0;
 }
 
-#quizform textarea {
+.quiz textarea {
     width: 100%;
 }
 
