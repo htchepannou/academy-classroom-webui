@@ -11,7 +11,7 @@ public class UserBackend extends Backend{
     public AuthResponse findSessionByToken(final String token) throws UserException {
         try{
             final String uri = String.format("%s/academy/v1/auth/access_token/%s", getUrl(), token);
-            return rest.getForEntity(uri, AuthResponse.class).getBody();
+            return http.get(uri, AuthResponse.class);
         } catch (RestClientResponseException e){
             throw new UserException(e.getRawStatusCode(), e.getResponseBodyAsString(), e);
         }

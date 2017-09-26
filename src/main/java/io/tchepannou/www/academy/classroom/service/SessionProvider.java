@@ -27,6 +27,8 @@ public class SessionProvider {
     @Autowired
     private AcademyMapper mapper;
 
+    private int maxAgeSeconds = 24*60*60*365;   // 1 year
+
     public Optional<SessionModel> getCurrentSession(final HttpServletRequest request){
         final String accessToken = getAccessToken(request);
         if (accessToken != null){
@@ -46,7 +48,10 @@ public class SessionProvider {
     }
 
     public void setAccessToken(final String accessToken, final HttpServletResponse response){
-        response.addCookie(new Cookie(COOKIE_NAME, accessToken));
+        final Cookie cookie = new Cookie(COOKIE_NAME, accessToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(this.maxAgeSeconds);
+        response.addCookie(cookie);
     }
 
     public String getAccessToken(final HttpServletRequest request){
@@ -65,5 +70,13 @@ public class SessionProvider {
             }
         }
         return null;
+    }
+
+    public int getMaxAgeSeconds() {
+        return maxAgeSeconds;
+    }
+
+    public void setMaxAgeSeconds(final int maxAgeSeconds) {
+        this.maxAgeSeconds = maxAgeSeconds;
     }
 }
