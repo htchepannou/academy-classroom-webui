@@ -1,5 +1,6 @@
 package io.tchepannou.www.academy.classroom.config;
 
+import io.tchepannou.www.academy.classroom.servlet.LoggerFilter;
 import io.tchepannou.www.academy.classroom.servlet.LoginFilter;
 import io.tchepannou.www.academy.classroom.servlet.RequiresUserFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -12,12 +13,19 @@ import javax.servlet.Filter;
 public class SecurityConfiguration {
     //-- Filters
     @Bean
+    public FilterRegistrationBean loggerFilterBean(){
+        return createFilterRegistrationBean(loggerFilter(), 1);
+    }
+
+    @Bean
+    public Filter loggerFilter(){
+        return new LoggerFilter();
+    }
+
+
+    @Bean
     public FilterRegistrationBean loginFilterBean(){
-        final FilterRegistrationBean filter = new FilterRegistrationBean();
-        filter.setFilter(loginFilter());
-        filter.addUrlPatterns("/classroom/*");
-        filter.setOrder(1);
-        return filter;
+        return createFilterRegistrationBean(loginFilter(), 2);
     }
 
     @Bean
@@ -27,15 +35,20 @@ public class SecurityConfiguration {
 
     @Bean
     public FilterRegistrationBean requiresUserFilterBean(){
-        final FilterRegistrationBean filter = new FilterRegistrationBean();
-        filter.setFilter(requiresUserFilter());
-        filter.addUrlPatterns("/classroom/*");
-        filter.setOrder(2);
-        return filter;
+        return createFilterRegistrationBean(requiresUserFilter(), 3);
     }
 
     @Bean
     public Filter requiresUserFilter(){
         return new RequiresUserFilter();
     }
+
+    private FilterRegistrationBean createFilterRegistrationBean(final Filter filter, final int order) {
+        final FilterRegistrationBean bean = new FilterRegistrationBean();
+        bean.setFilter(filter);
+        bean.addUrlPatterns("/classroom/*");
+        bean.setOrder(order);
+        return bean;
+    }
+
 }
