@@ -42,8 +42,8 @@ public class SessionProviderTest {
     @Test
     public void getAccessTokenShouldReturnAToken() throws Exception {
         when(request.getCookies()).thenReturn(new Cookie[]{
-            new Cookie("foo", "bar"),
-            new Cookie("guid", "123"),
+            createCookie("foo", "bar"),
+            createCookie("guid", "123"),
         });
 
         assertThat(provider.getAccessToken(request)).isEqualTo("123");
@@ -52,7 +52,7 @@ public class SessionProviderTest {
     @Test
     public void getAccessTokenShouldReturnNullWhenCookieNotAvaialable() throws Exception {
         when(request.getCookies()).thenReturn(new Cookie[]{
-                new Cookie("foo", "bar"),
+                createCookie("foo", "bar"),
         });
 
         assertThat(provider.getAccessToken(request)).isNull();
@@ -89,8 +89,8 @@ public class SessionProviderTest {
     @Test
     public void getCurrentSessionShouldReturnEmptyIfAccessTokenInvalid(){
         when(request.getCookies()).thenReturn(new Cookie[]{
-                new Cookie("foo", "bar"),
-                new Cookie("guid", "123"),
+                createCookie("foo", "bar"),
+                createCookie("guid", "123"),
         });
 
         when(userBackend.findSessionByToken("123")).thenThrow(new UserException(404, "test", new RuntimeException()));
@@ -103,7 +103,7 @@ public class SessionProviderTest {
     public void getCurrentSessionShouldReturnSessionIfTokenValid(){
         // Given
         when(request.getCookies()).thenReturn(new Cookie[]{
-                new Cookie("guid", "123"),
+                createCookie("guid", "123"),
         });
 
         final AuthResponse response = new AuthResponse();
@@ -119,5 +119,14 @@ public class SessionProviderTest {
         // Then
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(session);
+    }
+
+    private Cookie createCookie(String name, String value){
+        return createCookie(name, value, "/");
+    }
+    private Cookie createCookie(String name, String value, String path){
+        final Cookie cookie = new Cookie(name, value);
+        cookie.setPath(path);
+        return cookie;
     }
 }
