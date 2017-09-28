@@ -65,7 +65,13 @@ public class SessionProvider {
             return null;
         }
         for (Cookie cookie : cookies){
-            if (COOKIE_NAME.equals(cookie.getName())){
+            if (COOKIE_NAME.equals(cookie.getName()) && "/".equals(cookie.getValue())){
+                LOGGER.info("cookie: name={}, value={}, maxAge={}, version={}",
+                        cookie.getName(),
+                        cookie.getValue(),
+                        cookie.getMaxAge(),
+                        cookie.getVersion()
+                );
                 return cookie.getValue();
             }
         }
