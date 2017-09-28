@@ -43,7 +43,7 @@ public class LoginFilterTest {
         filter.doFilter(request, response, chain);
 
         // Then
-        verify(sessionProvider).setAccessToken("123", response);
+        verify(sessionProvider).setAccessToken("123", request, response);
         verify(chain).doFilter(request, response);
 
     }
@@ -58,7 +58,7 @@ public class LoginFilterTest {
         filter.doFilter(request, response, chain);
 
         // Then
-        verify(sessionProvider, never()).setAccessToken(anyString(), any(HttpServletResponse.class));
+        verify(sessionProvider, never()).setAccessToken(anyString(), any(HttpServletRequest.class), any(HttpServletResponse.class));
         verify(chain).doFilter(request, response);
 
     }

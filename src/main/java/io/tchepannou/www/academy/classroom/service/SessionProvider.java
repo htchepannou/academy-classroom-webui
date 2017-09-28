@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -47,10 +51,13 @@ public class SessionProvider {
         return Optional.empty();
     }
 
-    public void setAccessToken(final String accessToken, final HttpServletResponse response){
+    public void setAccessToken(final String accessToken, final HttpServletRequest request, final HttpServletResponse response){
+        final Cookie old = getCookie(request);
+
         final Cookie cookie = new Cookie(COOKIE_NAME, accessToken);
         cookie.setPath("/");
         cookie.setMaxAge(this.maxAgeSeconds);
+        cookie.setVersion(old == null ? 1 : old.getVersion()+1);
         response.addCookie(cookie);
     }
 
@@ -60,24 +67,47 @@ public class SessionProvider {
             return accessToken;
         }
 
+        final Cookie cookie = getCookie(request);
+        return cookie == null ? null : cookie.getValue();
+    }
+
+    private Cookie getCookie(final HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
         if (cookies == null){
             return null;
         }
+        final List<Cookie> found = new ArrayList();
         for (Cookie cookie : cookies){
-            if (COOKIE_NAME.equals(cookie.getName()) && "/".equals(cookie.getValue())){
+            if (COOKIE_NAME.equals(cookie.getName()) && "/".equals(cookie.getPath())){
                 LOGGER.info("cookie: name={}, value={}, maxAge={}, version={}",
                         cookie.getName(),
                         cookie.getValue(),
                         cookie.getMaxAge(),
                         cookie.getVersion()
                 );
-                return cookie.getValue();
+                found.add(cookie);
             }
         }
+
+        if (found.size() > 0){
+            LOGGER.info("Found {} cookies", found.size());
+            if (found.size() > 1){
+                Collections.sort(found, createComparator());
+            }
+            return found.get(0);
+        }
+
         return null;
     }
 
+    private Comparator<Cookie> createComparator(){
+        return new Comparator<Cookie>() {
+            @Override
+            public int compare(final Cookie o1, final Cookie o2) {
+                return o2.getVersion() - o1.getVersion();
+            }
+        };
+    }
     public int getMaxAgeSeconds() {
         return maxAgeSeconds;
     }

@@ -71,7 +71,7 @@ public class SessionProviderTest {
         when(request.getParameter("guid")).thenReturn("123");
 
         // When
-        provider.setAccessToken("123", response);
+        provider.setAccessToken("123", request, response);
 
         // Then
         ArgumentCaptor<Cookie> cookie = ArgumentCaptor.forClass(Cookie.class);
@@ -79,6 +79,31 @@ public class SessionProviderTest {
 
         assertThat(cookie.getValue().getName()).isEqualTo("guid");
         assertThat(cookie.getValue().getValue()).isEqualTo("123");
+        assertThat(cookie.getValue().getPath()).isEqualTo("/");
+        assertThat(cookie.getValue().getVersion()).isEqualTo(1);
+    }
+
+    @Test
+    public void setAccessTokenShouldUpdateCookieVersion() throws Exception {
+        // Given
+        when(request.getCookies()).thenReturn(new Cookie[]{
+                createCookie("foo", "bar"),
+                createCookie("guid", "----", "/", 12),
+        });
+
+        when(request.getParameter("guid")).thenReturn("123");
+
+        // When
+        provider.setAccessToken("123", request, response);
+
+        // Then
+        ArgumentCaptor<Cookie> cookie = ArgumentCaptor.forClass(Cookie.class);
+        verify(response).addCookie(cookie.capture());
+
+        assertThat(cookie.getValue().getName()).isEqualTo("guid");
+        assertThat(cookie.getValue().getValue()).isEqualTo("123");
+        assertThat(cookie.getValue().getPath()).isEqualTo("/");
+        assertThat(cookie.getValue().getVersion()).isEqualTo(13);
     }
 
     @Test
@@ -122,11 +147,12 @@ public class SessionProviderTest {
     }
 
     private Cookie createCookie(String name, String value){
-        return createCookie(name, value, "/");
+        return createCookie(name, value, "/", 1);
     }
-    private Cookie createCookie(String name, String value, String path){
+    private Cookie createCookie(String name, String value, String path, int version){
         final Cookie cookie = new Cookie(name, value);
         cookie.setPath(path);
+        cookie.setVersion(version);
         return cookie;
     }
 }

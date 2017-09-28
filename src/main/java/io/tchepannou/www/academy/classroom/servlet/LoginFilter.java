@@ -45,7 +45,7 @@ public class LoginFilter implements Filter {
         String accessToken = request.getParameter(PARAM_NAME);
         if (!StringUtil.isBlank(accessToken)){
             LOGGER.info("Authenticated");
-            sessionProvider.setAccessToken(accessToken, response);
+            sessionProvider.setAccessToken(accessToken, request, response);
         }
     }
 }
