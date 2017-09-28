@@ -11,6 +11,7 @@ public class SegmentDto {
     private Integer rank;
     private String summary;
     private String description;
+    private Integer durationSecond;
 
     public Integer getId() {
         return id;
@@ -82,5 +83,13 @@ public class SegmentDto {
 
     public void setLessonId(final Integer lessonId) {
         this.lessonId = lessonId;
+    }
+
+    public Integer getDurationSecond() {
+        return durationSecond;
+    }
+
+    public void setDurationSecond(final Integer durationSecond) {
+        this.durationSecond = durationSecond;
     }
 }

@@ -21,6 +21,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 @Component
 public class AcademyMapper {
     @Autowired
@@ -66,6 +69,8 @@ public class AcademyMapper {
 
     public SegmentModel toSegmentModel(final SegmentDto dto){
         final SegmentModel model = new SegmentModel();
+        final NumberFormat fmt = new DecimalFormat("00");
+        final Integer durationSecond = dto.getDurationSecond();
 
         model.setId(dto.getId());
         model.setDescription(markdown2Html(dto.getDescription()));
@@ -75,6 +80,13 @@ public class AcademyMapper {
         model.setType(dto.getType());
         model.setVideoId(dto.getVideoId());
         model.setQuizId(dto.getQuizId());
+        model.setDurationSecond(durationSecond);
+
+        if (durationSecond != null) {
+            final int minute = durationSecond / 60;
+            final int seconds = durationSecond % 60;
+            model.setDurationFormatted(fmt.format(minute) + ':' + fmt.format(seconds));
+        }
         return model;
     }
 

@@ -25,30 +25,43 @@
 }
 .playlist li {
     overflow: hidden;
-    padding: 2px;
+    padding: .5em;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: .85em;
+    display: flex;
 }
 .playlist li.active {
     background: #fff;
     font-weight: 500;
 }
-.playlist li a:hover {
-    text-decoration: none;
+.playlist li:hover {
+    background: #fff;
 }
-.playlist li .rank{
-    margin-right: .25em;
-    width: 25px;
-    display: inline-block;
+
+.playlist a,
+.playlist a:active{
+    text-decoration: none;
 }
 .playlist li .ok{
     color: darkgreen;
-    display: inline-block;
-    width: 16px;
+    width: 1.5em;
+}
+.playlist li .rank{
+    margin-right: .25em;
+    width: 1.5em;
 }
 .playlist li .rank::after{
     content: ".";
+}
+.playlist li .title{
+    width: 20em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.playlist li .duration{
+    width: 3em;
 }
 
 .notes {

@@ -171,6 +171,8 @@ public class ClassroomControllerStubIT {
         assertThat(segment.getType()).isEqualTo("video");
         assertThat(segment.getSummary()).isNull();
         assertThat(segment.getDescription()).isNull();
+        assertThat(segment.getDurationSecond()).isEqualTo(74);
+        assertThat(segment.getDurationFormatted()).isEqualTo("01:14");
 
         final List segments = (List)model.get("segments");
         assertThat(segments).hasSize(13);

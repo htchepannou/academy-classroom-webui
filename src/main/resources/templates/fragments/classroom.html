@@ -17,20 +17,17 @@
 <div class="playlist" th:fragment="playlist">
     <h4 class="title" th:text="${lesson.rank} + '. ' + ${lesson.title}">#</h4>
     <ul>
-        <li th:each="item:${segments}" th:classappend="${item} == ${segment} ? active : ''">
-            <div th:if="${item.attended}">
-                <a th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
-                    <span class="ok"><i class="glyphicon glyphicon-ok"></i></span>
-                    <span class="rank"  th:text="${item.rank}"></span>
-                    <span class="title" th:text="${item.title}">Segment Title</span>
-                </a>
-            </div>
-            <div th:if="!${item.attended}">
-                <span class="ok"></span>
-                <span class="rank"  th:text="${item.rank}"></span>
-                <span class="title" th:text="${item.title}">Segment Title</span>
-            </div>
-        </li>
+        <a th:each="item:${segments}" th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
+            <li th:classappend="${item} == ${segment} ? active : ''">
+                <div class="ok"><i class="glyphicon glyphicon-ok" th:if="${item.attended}"></i></div>
+                <div class="rank"  th:text="${item.rank}"></div>
+                <div class="title" >
+                    <span th:if="${item.type} == 'quiz'">Quiz: </span>
+                    <span th:text="${item.title}">Segment Title</span>
+                </div>
+                <div class="duration" th:text="${item.durationFormatted}">01:30</div>
+            </li>
+        </a>
     </ul>
 </div>
 
