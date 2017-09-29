@@ -1,6 +1,8 @@
 package io.tchepannou.www.academy.classroom.backend.academy;
 
 import io.tchepannou.www.academy.classroom.backend.Backend;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,7 @@ import java.util.List;
 @Component
 @ConfigurationProperties("application.backend.AcademyBackend")
 public class AcademyBackend extends Backend{
+    private static final Logger LOGGER = LoggerFactory.getLogger(AcademyBackend.class);
 
     public CourseResponse findCourseById(final Integer id) throws AcademyException{
         final String uri = String.format("%s/academy/v1/courses/%s", getUrl(), id);
@@ -40,14 +43,13 @@ public class AcademyBackend extends Backend{
         return http.get(uri, VideoResponse.class);
     }
 
-    public void start(final Integer studentId, final Integer segmentId){
-        final String uri = String.format("%s/academy/v1/attendances/students/%s/segments/%s/start", getUrl(), studentId, segmentId);
-        http.post(uri);
-    }
-
     public void done(final Integer studentId, final Integer segmentId){
-        final String uri = String.format("%s/academy/v1/attendances/students/%s/segments/%s/done", getUrl(), studentId, segmentId);
-        http.post(uri);
+        try {
+            final String uri = String.format("%s/academy/v1/attendances/students/%s/segments/%s/done", getUrl(), studentId, segmentId);
+            http.post(uri);
+        } catch (Exception e){
+            LOGGER.error("Unable to send DONE event", e);
+        }
     }
 
     public AttendanceResponse findAttendance(final Integer studentId, final Integer courseId){

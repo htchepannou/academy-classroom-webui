@@ -2,13 +2,12 @@
   "transactionId": "0861dd5e-88ce-4a6a-b5e8-0b30a50a7359",
   "transactionDateTime": "2017-09-19T07:26:27-0400",
   "attendance": {
-    "id": 400,
+    "id": 500,
     "studentId": 1,
-    "courseId": 100,
-    "currentSegmentId": 10112,
+    "courseId": 500,
     "attendanceDateTime": "2017-01-02T03:30:00-0500",
     "courseSegmentCount": 12,
-    "attendedSegmentCount": 1,
+    "attendedSegmentCount": 12,
     "segments": [
       {
         "id": 10101,

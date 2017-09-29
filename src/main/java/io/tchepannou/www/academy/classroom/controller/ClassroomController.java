@@ -6,8 +6,8 @@ import io.tchepannou.www.academy.classroom.backend.academy.CourseAttendanceDto;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizAnswerResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentListResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.SegmentResponse;
@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -64,19 +63,17 @@ public class ClassroomController {
         Integer segmentId = null;
 
         /* get current response */
-        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
-        if (session.isPresent()) {
-            try {
+        final SessionModel session = sessionProvider.getCurrentSession(request);
+        try {
 
-                final Integer studentId = session.get().getRoleId();
-                final AttendanceResponse response = academyBackend.findAttendance(studentId, courseId);
-                final SegmentDto segment = academyBackend.findSegmentById(courseId, response.getAttendance().getCurrentSegmentId()).getSegment();
-                segmentId = segment.getId();
-                lessonId = segment.getLessonId();
+            final Integer studentId = session.getRoleId();
+            final AttendanceResponse response = academyBackend.findAttendance(studentId, courseId);
+            final SegmentDto segment = academyBackend.findSegmentById(courseId, response.getAttendance().getCurrentSegmentId()).getSegment();
+            segmentId = segment.getId();
+            lessonId = segment.getLessonId();
 
-            } catch (Exception e){
-                LOGGER.warn("Unable to load the course attendance", e);
-            }
+        } catch (Exception e){
+            LOGGER.warn("Unable to load the course attendance", e);
         }
 
         return index(courseId, lessonId, segmentId, model, request);
@@ -91,18 +88,6 @@ public class ClassroomController {
             final HttpServletRequest request
     ){
         final SegmentModel segment = openSegment(courseId, lessonId, segmentId, model, request);
-
-        // Send event
-        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
-        if (session.isPresent()) {
-            try {
-                final Integer studentId = session.get().getRoleId();
-                academyBackend.start(studentId, segment.getId());
-            } catch (Exception e) {
-                LOGGER.warn("Unable to send event START", e);
-            }
-        }
-
         return "classroom";
     }
 
@@ -131,14 +116,8 @@ public class ClassroomController {
             final HttpServletRequest request
     ){
         // Event
-        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
-        if (session.isPresent()) {
-            try {
-                academyBackend.done(session.get().getRoleId(), segmentId);
-            } catch (Exception e){
-                LOGGER.warn("Unable to send DONE event", e);
-            }
-        }
+        final SessionModel session = sessionProvider.getCurrentSession(request);
+        academyBackend.done(session.getRoleId(), segmentId);
 
         // Next URL
         final List<LessonModel> lessons = loadLessons(courseId);
@@ -150,7 +129,17 @@ public class ClassroomController {
     }
 
     @RequestMapping(value="/classroom/{courseId}/done")
-    public String done (@PathVariable final Integer courseId, final Model model){
+    public String done (
+            @PathVariable final Integer courseId,
+            final Model model,
+            final HttpServletRequest request
+    ){
+        final SessionModel session = sessionProvider.getCurrentSession(request);
+        final CourseAttendanceDto attendance = academyBackend.findAttendance(session.getRoleId(), courseId).getAttendance();
+        if (attendance.getAttendedSegmentCount() < attendance.getCourseSegmentCount()){
+            return "redirect:/classroom/" + courseId;
+        }
+
         final CourseModel course = getCourse(courseId);
         model.addAttribute("course", course);
         return "done";
@@ -193,15 +182,13 @@ public class ClassroomController {
         }
 
         // Attendance
-        final Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
-        if (session.isPresent()) {
-            try {
-                final Integer studentId = session.get().getRoleId();
-                final AttendanceResponse response = academyBackend.findAttendance(studentId, course.getId());
-                updateAttendance(segments, response.getAttendance());
-            } catch (Exception e){
-                LOGGER.warn("Unable to load the course attendance", e);
-            }
+        final SessionModel session = sessionProvider.getCurrentSession(request);
+        try {
+            final Integer studentId = session.getRoleId();
+            final AttendanceResponse response = academyBackend.findAttendance(studentId, course.getId());
+            updateAttendance(segments, response.getAttendance());
+        } catch (Exception e){
+            LOGGER.warn("Unable to load the course attendance", e);
         }
 
         // Next URL

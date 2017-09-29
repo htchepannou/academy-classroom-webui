@@ -1,6 +1,6 @@
 package io.tchepannou.www.academy.classroom.servlet;
 
-import io.tchepannou.www.academy.classroom.model.SessionModel;
+import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Optional;
 
 public class RequiresUserFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequiresUserFilter.class);
@@ -66,8 +65,13 @@ public class RequiresUserFilter implements Filter {
     }
 
     private boolean shouldLogin(final HttpServletRequest request){
-        Optional<SessionModel> session = sessionProvider.getCurrentSession(request);
-        return !session.isPresent();
+        try {
+            sessionProvider.getCurrentSession(request);
+            return false;
+        } catch (SessionException e){
+            LOGGER.warn("Unable to resolve the session", e);
+            return true;
+        }
     }
 
     public String getLoginUrl() {

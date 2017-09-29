@@ -4,6 +4,7 @@ import io.tchepannou.www.academy.classroom.backend.user.AuthResponse;
 import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
 import io.tchepannou.www.academy.classroom.backend.user.UserException;
+import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -94,25 +94,25 @@ public class SessionProviderTest {
         when(request.getParameter("guid")).thenReturn("123");
 
         // When
-        provider.setAccessToken("123", request, response);
+        provider.setAccessToken("hello", request, response);
 
         // Then
-        ArgumentCaptor<Cookie> cookie = ArgumentCaptor.forClass(Cookie.class);
-        verify(response).addCookie(cookie.capture());
+        ArgumentCaptor<Cookie> cook = ArgumentCaptor.forClass(Cookie.class);
+        verify(response).addCookie(cook.capture());
 
-        assertThat(cookie.getValue().getName()).isEqualTo("guid");
-        assertThat(cookie.getValue().getValue()).isEqualTo("123");
-        assertThat(cookie.getValue().getPath()).isEqualTo("/");
-        assertThat(cookie.getValue().getVersion()).isEqualTo(13);
+        assertThat(cook.getValue().getName()).isEqualTo("guid");
+        assertThat(cook.getValue().getValue()).isEqualTo("hello");
+        assertThat(cook.getValue().getPath()).isEqualTo("/");
+        assertThat(cook.getValue().getVersion()).isEqualTo(13);
     }
 
-    @Test
-    public void getCurrentSessionShouldReturnEmptyIfNoAccessToken(){
-        assertThat(provider.getCurrentSession(request)).isEmpty();
+    @Test(expected = SessionException.class)
+    public void getCurrentSessionShouldThrowExceptionIfNoAccessToken(){
+        provider.getCurrentSession(request);
     }
 
-    @Test
-    public void getCurrentSessionShouldReturnEmptyIfAccessTokenInvalid(){
+    @Test(expected = SessionException.class)
+    public void getCurrentSessionShouldThrowExceptionIfAccessTokenInvalid(){
         when(request.getCookies()).thenReturn(new Cookie[]{
                 createCookie("foo", "bar"),
                 createCookie("guid", "123"),
@@ -120,7 +120,7 @@ public class SessionProviderTest {
 
         when(userBackend.findSessionByToken("123")).thenThrow(new UserException(404, "test", new RuntimeException()));
 
-        assertThat(provider.getCurrentSession(request)).isEmpty();
+        provider.getCurrentSession(request);
     }
 
 
@@ -139,11 +139,24 @@ public class SessionProviderTest {
         when(mapper.toSessionModel(any())).thenReturn(session);
 
         // When
-        final Optional<SessionModel> result = provider.getCurrentSession(request);
+        final SessionModel result = provider.getCurrentSession(request);
 
         // Then
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(session);
+        assertThat(result).isEqualTo(session);
+        verify(request).setAttribute(SessionProvider.ATTR_SESSION, result);
+    }
+
+    @Test
+    public void getCurrentSessionShouldReturnCachedSession(){
+        // Given
+        final SessionModel session = new SessionModel();
+        when(request.getAttribute(SessionProvider.ATTR_SESSION)).thenReturn(session);
+
+        // When
+        final SessionModel result = provider.getCurrentSession(request);
+
+        // Then
+        assertThat(result).isEqualTo(session);
     }
 
     private Cookie createCookie(String name, String value){

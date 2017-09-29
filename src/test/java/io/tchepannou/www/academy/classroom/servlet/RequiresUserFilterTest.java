@@ -1,5 +1,6 @@
 package io.tchepannou.www.academy.classroom.servlet;
 
+import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import org.junit.Before;
@@ -12,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
@@ -45,7 +45,7 @@ public class RequiresUserFilterTest {
     @Test
     public void shouldUnauthorizeUserWhenNoCurrentSession() throws Exception {
         // Given
-        when(sessionProvider.getCurrentSession(any())).thenReturn(Optional.empty());
+        when(sessionProvider.getCurrentSession(any())).thenThrow(new SessionException(1, ""));
 
         // When
         filter.doFilter(request, response, chain);
@@ -59,7 +59,7 @@ public class RequiresUserFilterTest {
     public void shouldAuthorizeUserWhenCurrentSession() throws Exception {
         // Given
         final SessionModel session = new SessionModel();
-        when(sessionProvider.getCurrentSession(any())).thenReturn(Optional.of(session));
+        when(sessionProvider.getCurrentSession(any())).thenReturn(session);
 
         // When
         filter.doFilter(request, response, chain);

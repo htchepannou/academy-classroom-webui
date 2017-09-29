@@ -11,6 +11,8 @@ public class CourseAttendanceDto {
     private Integer currentSegmentId;
     private Date attendanceDateTime;
     private List<SegmentAttendanceDto> segments;
+    private Integer courseSegmentCount;
+    private Integer attendedSegmentCount;
 
     public Integer getId() {
         return id;
@@ -58,5 +60,21 @@ public class CourseAttendanceDto {
 
     public void setSegments(final List<SegmentAttendanceDto> segments) {
         this.segments = segments;
+    }
+
+    public Integer getCourseSegmentCount() {
+        return courseSegmentCount;
+    }
+
+    public void setCourseSegmentCount(final Integer courseSegmentCount) {
+        this.courseSegmentCount = courseSegmentCount;
+    }
+
+    public Integer getAttendedSegmentCount() {
+        return attendedSegmentCount;
+    }
+
+    public void setAttendedSegmentCount(final Integer attendedSegmentCount) {
+        this.attendedSegmentCount = attendedSegmentCount;
     }
 }

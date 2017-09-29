@@ -257,19 +257,33 @@ public class ClassroomControllerStubIT {
         }
     }
 
+    // DONE
     @Test
-    public void shouldFinishClassroom() throws Exception {
+    public void doneShouldRedirectToClassroomWhenAllSegmentNotDone() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
 
         // WHEN
-        controller.done(100, model);
+        final String result = controller.done(100, model, request);
 
         // THEN
-        assertThat(model).hasSize(1);
+        assertThat(result).isEqualTo("redirect:/classroom/100");
+    }
 
+    @Test
+    public void doneShouldRedirectToDoneWhenAllSegmentDone() throws Exception {
+        // GIVEN
+        final ExtendedModelMap model = new ExtendedModelMap();
+
+        // WHEN
+        final String result = controller.done(500, model, request);
+
+        // THEN
+        assertThat(result).isEqualTo("done");
+
+        assertThat(model).hasSize(1);
         final CourseModel course = (CourseModel)model.get("course");
-        assertCourse(course);
+        assertThat(course.getId()).isEqualTo(500);
     }
 
     //-- private
