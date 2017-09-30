@@ -40,8 +40,7 @@ If you want to run the service and all its downstream locally:
 - Run the dependent services using `local` profile:
   - `academy-service`: See instructions [here](https://github.com/htchepannou/academy-service#run-the-server-locally)
   - `academy-login-webui`: See instructions [here](https://github.com/htchepannou/academy-login-webui#run-the-service-locally)
-- Run the service using `local` profile (The service will run on port `vvvdvvdfcticiivgverkvktueheivekvttjnjfflikiv
-28080`):
+- Run the service using `local` profile (The service will run on port `28080`):
 ```
 $ java -Dspring.profiles.active=local -jar target/academy-classroom-webui.jar
 ```

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta charset="UTF-8" />
+
+    <link rel="stylesheet" href='/static/lib/bootstrap/3.3.7/css/bootstrap.min.css"'/>
+    <link rel="stylesheet" href='/static/lib/academy/css/academy.css"'/>
+
+    <script src="/static/lib/jquery/3.2.1/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/lib/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+<div th:fragment="singlechoice">
+    <ul>
+        <li th:each="choice:${quiz.choices}">
+            <input type="radio" name="value" th:attr="value=${choice.id}"/>
+            <span th:text="${choice.text}">TEXT</span>
+        </li>
+    </ul>
+</div>
+<div th:fragment="multichoice">
+    <ul>
+        <li th:each="choice:${quiz.choices}">
+            <input type="checkbox" name="value" th:attr="value=${choice.id}"/>
+            <span th:text="${choice.text}">TEXT</span>
+        </li>
+    </ul>
+</div>
+<div th:fragment="string">
+    <input type="text" name="value" />
+</div>
+<div th:fragment="text">
+    <textarea name="value" rows="5"></textarea>
+</div>
+<div th:fragment="markdown">
+    <div class="markdown-container">
+        <textarea id="markdown-input" name="value" rows="5"></textarea>
+        <div id="markdown-preview" class="markdown-preview"></div>
+    </div>
+
+    <script src="/static/lib/showdown/1.0.2/js/showdown.min.js"></script>
+    <script th:inline="javascript">
+        //<![CDATA[
+
+        var converter = new showdown.Converter();
+        $(document).ready(function(){
+            $('#markdown-input').keydown(function (){
+                var html =  converter.makeHtml($('#markdown-input').val());
+                $('#markdown-preview').html(html);
+            });
+        });
+
+        //]]>
+    </script>
+</div>
+
+</body>
+</html>

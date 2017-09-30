@@ -80,18 +80,14 @@
 }
 
 .quiz {
-    padding: 3em;
     border: 1px solid #e7e7e7;
 }
 .quiz .question {
     text-align: center;
-    margin-top: 0px;
+    padding: 1em;
 }
 .quiz .description {
     padding: 1em;
-    background: #f4f4f4;
-    border: 1px solid #e7e7e7;
-    margin-bottom: 1em;
 }
 
 .quiz .answer {
@@ -112,7 +108,64 @@
     width: 100%;
 }
 
+.quiz .markdown-container{
+    display: flex;
+    border: 1px solid darkgray;
+    height: 400px;
+}
+.quiz .markdown-container textarea {
+    width: 50%;
+    height: 100%;
+}
+.quiz .markdown-preview{
+    width: 50%;
+    height: 100%;
+    padding: 5px;
+    background: #f4f4f4;
+    font-size: 14px;
+}
+
+.markdown-preview p{
+    margin: 0 0 5px 0;
+}
+.markdown-preview h1{
+    font-size: 18px;
+}
+.markdown-preview h2{
+    font-size: 16px;
+}
+.markdown-preview h3{
+    font-size: 15px;
+}
+.markdown-preview h4{
+    font-size: 14px;
+}
+.markdown-preview ul{
+    margin-bottom: 5px;
+    list-style: square;
+}
+.markdown-preview li{
+    list-style: square !important;
+    margin: 0 0 5px 0 !important;
+}
+
+.preview-markdown h1,
+.preview-markdown h2,
+.preview-markdown h3,
+.preview-markdown h4{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.preview-markdown pre {
+    background: white;
+}
+
+
 .modal-dialog .modal-header,
 .modal-dialog .modal-body{
     text-align: center;
 }
+
+
+/*====== MARKDOWN =====*/

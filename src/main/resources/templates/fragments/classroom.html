@@ -86,18 +86,8 @@
         <div class="quiz">
             <h3 class="question" th:text="${quiz.question}">Question Here</h3>
             <div class="markdown description" th:utext="${quiz.description}" th:if="${quiz.description}">Description here...</div>
-
             <div class="answers">
-                <ul th:if="${quiz.type} == 'singlechoice' OR ${quiz.type} == 'multichoice'">
-                    <li th:each="choice:${quiz.choices}">
-                        <input type="radio" name="value" th:if="${quiz.type} == 'singlechoice'" th:attr="value=${choice.id}"/>
-                        <input type="checkbox" name="value" th:if="${quiz.type} == 'multichoice'"  th:attr="value=${choice.id}"/>
-
-                        <span th:text="${choice.text}" class="answer">Choice Text</span>
-                    </li>
-                </ul>
-                <input type="text" name="value" th:if="${quiz.type} == 'text'"/>
-                <textarea name="value" rows="5" th:if="${quiz.type} == 'longtext'"></textarea>
+                <div th:replace="fragments/quiz :: ${quiz.type}">QUIZ</div>
             </div>
         </div>
 

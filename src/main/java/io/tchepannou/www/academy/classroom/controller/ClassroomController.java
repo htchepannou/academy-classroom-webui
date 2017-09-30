@@ -59,24 +59,7 @@ public class ClassroomController {
             final Model model,
             final HttpServletRequest request
     ) {
-        Integer lessonId = null;
-        Integer segmentId = null;
-
-        /* get current response */
-        final SessionModel session = sessionProvider.getCurrentSession(request);
-        try {
-
-            final Integer studentId = session.getRoleId();
-            final AttendanceResponse response = academyBackend.findAttendance(studentId, courseId);
-            final SegmentDto segment = academyBackend.findSegmentById(courseId, response.getAttendance().getCurrentSegmentId()).getSegment();
-            segmentId = segment.getId();
-            lessonId = segment.getLessonId();
-
-        } catch (Exception e){
-            LOGGER.warn("Unable to load the course attendance", e);
-        }
-
-        return index(courseId, lessonId, segmentId, model, request);
+        return index(courseId, null, null, model, request);
     }
 
     @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}")
@@ -87,7 +70,7 @@ public class ClassroomController {
             final Model model,
             final HttpServletRequest request
     ){
-        final SegmentModel segment = openSegment(courseId, lessonId, segmentId, model, request);
+        openSegment(courseId, lessonId, segmentId, model, request);
         return "classroom";
     }
 

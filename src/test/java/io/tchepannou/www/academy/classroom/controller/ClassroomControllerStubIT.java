@@ -96,25 +96,6 @@ public class ClassroomControllerStubIT {
     }
 
     @Test
-    public void shouldOpenClassroomAndLandOnLastSegmentViewed() throws Exception {
-        // GIVEN
-        final ExtendedModelMap model = new ExtendedModelMap();
-
-        // WHEN
-        controller.index(100, model, request);
-
-        // THEN
-        final LessonModel lesson = (LessonModel)model.get("lesson");
-        assertThat(lesson.getId()).isEqualTo(101);
-
-        final SegmentModel segment = (SegmentModel)model.get("segment");
-        assertThat(segment.getId()).isEqualTo(10112);
-
-        final VideoModel video = (VideoModel)model.get("video");
-        assertThat(video.getId()).isEqualTo(10112);
-    }
-
-    @Test
     public void shouldOpenTextSegment() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
