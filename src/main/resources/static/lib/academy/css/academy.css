@@ -120,7 +120,7 @@
 .quiz .markdown-preview{
     width: 50%;
     height: 100%;
-    padding: 5px;
+    padding: 10px;
     background: #f4f4f4;
     font-size: 14px;
 }
@@ -149,15 +149,15 @@
     margin: 0 0 5px 0 !important;
 }
 
-.preview-markdown h1,
-.preview-markdown h2,
-.preview-markdown h3,
-.preview-markdown h4{
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4{
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.preview-markdown pre {
+.markdown-preview pre {
     background: white;
 }
 
