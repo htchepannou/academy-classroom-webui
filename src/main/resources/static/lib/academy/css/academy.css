@@ -32,6 +32,7 @@
 
 /* ==== VIDEO ==== */
 .video-area {
+    background: black;
     border-bottom: 1px solid #e7e7e7;
 }
 
@@ -93,12 +94,14 @@
 
 /*===== QUIZ ===*/
 .quiz-area {
+    background: black;
     border-bottom: 1px solid #e7e7e7;
     display: none;
 }
 
 .quiz {
     display: flex;
+    background: white;
     flex-direction: column;
 }
 
@@ -137,7 +140,6 @@
     justify-content: flex-end;
     margin: .5em 0;
     padding: .5em 0;
-    height: 50px;
 }
 .toolbar .btn{
     margin-left: .5em;

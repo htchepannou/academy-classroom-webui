@@ -23,11 +23,35 @@
         </div>
     </div>
     <div class="course">
+
         <div class="video-area" th:if="${video}">
-            <div th:replace="fragments/classroom :: video" >Video</div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-1 hidden-xs hidden-sm"></div>
+                    <div class="col-md-10">
+                        <div th:replace="fragments/classroom :: video" >Video</div>
+                    </div>
+                </div>
+                <div class="row toolbar">
+                    <a class="btn btn-default" href="javascript: quiz_show()" th:if="${quiz}" th:text="#{button.start_quiz}">Start Quiz</a>
+                    <a class="btn btn-default" th:text="#{button.next}" th:attr="href=${nextUrl}">Next</a>
+                </div>
+            </div>
         </div>
+
         <div class="quiz-area" th:if="${quiz}">
-            <div th:replace="fragments/classroom :: quiz">QUIZ</div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-1 hidden-xs hidden-sm"></div>
+                    <div class="col-md-10">
+                        <div th:replace="fragments/classroom :: quiz">QUIZ</div>
+                    </div>
+                </div>
+                <div class="row toolbar">
+                    <a class="btn btn-primary" th:text="#{button.submit_answer}" onclick="quiz_submit()">Submit Answer</a>
+                    <a class="btn btn-default" th:text="#{button.skip_quiz}" th:attr="href=${nextUrl}">Skip Quiz</a>
+                </div>
+            </div>
         </div>
 
         <div class="container-fluid">
@@ -38,6 +62,9 @@
 
                 <div class="col-md-8">
                     <div class="markdown" th:utext="${segment.description}">Segment Description</div>
+                    <div class="toolbar" th:if="${segment.description}">
+                        <a class="btn btn-default" th:text="#{button.next}" th:attr="href=${nextUrl}">Next</a>
+                    </div>
                 </div>
             </div>
         </div>

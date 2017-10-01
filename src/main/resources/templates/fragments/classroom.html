@@ -55,14 +55,18 @@
                 videoId: /*[[${video.videoId}]]*/ 'ID',
                 events: {
                     'onReady': function(event){
-                        console.log('onReady', event);
                         event.target.playVideo();
                     },
                     'onStateChange': function(event){
                         console.log('onStateChange', event);
+                        var quiz = /*[[${quiz} ? true : false]]*/ false;
                         var nextUrl = /*[[${nextUrl}]]*/ 'value';
-                        if (nextUrl && event.data == YT.PlayerState.ENDED){
-                            location.href = nextUrl;
+                        if (nextUrl && event.data == YT.PlayerState.ENDED) {
+                            if (quiz) {
+                                quiz_show();
+                            } else {
+                                location.href = nextUrl;
+                            }
                         }
                     }
                 }
@@ -80,10 +84,6 @@
             <div class="markdown description" th:utext="${quiz.description}" th:if="${quiz.description}">Quiz Description</div>
             <div class="answers" th:replace="fragments/quiz :: ${quiz.type}">
                 ANSWERS
-            </div>
-            <div class="toolbar">
-                <a class="btn btn-primary" th:text="#{button.submit_answer}" onclick="submit()">...</a>
-                <a class="btn btn-default" th:text="#{button.skip_quiz}" th:attr="href=${nextUrl}">...</a>
             </div>
         </div>
     </form>
@@ -121,9 +121,8 @@
     </div>
 
     <script th:inline="javascript">
-        //<![CDATA[
-        function submit() {
-            jQuery.ajax({
+        function quiz_submit() {
+            $.ajax({
                 type: 'POST',
                 url: /*[['/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${segment.id} + '/quiz/answer']]*/ 'url',
                 data: $('#quizform').serialize(),
@@ -138,6 +137,13 @@
                         $('#modal_failure').modal();
                     }
                 }
+            });
+        }
+
+        //<![CDATA[
+        function quiz_show() {
+            $('.video-area').fadeOut('slow', function(){
+                $('.quiz-area').fadeIn();
             });
         }
         //]]>
