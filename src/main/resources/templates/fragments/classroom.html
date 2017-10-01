@@ -21,7 +21,7 @@
                 <div class="ok"><i class="glyphicon glyphicon-ok" th:if="${item.attended}"></i></div>
                 <div class="rank"  th:text="${item.rank}"></div>
                 <div class="title" >
-                    <span th:if="${item.type} == 'quiz'">Quiz: </span>
+                    <span class="quiz-prefix" th:if="${item.type} == 'quiz'" th:text="#{label.quiz}">Quiz:</span>
                     <span th:text="${item.title}">Segment Title</span>
                 </div>
                 <div class="duration" th:text="${item.durationFormatted}">01:30</div>

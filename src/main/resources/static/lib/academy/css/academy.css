@@ -41,6 +41,7 @@
 .playlist{
     background: #f1f4f4;
     padding: 1em 0 !important;
+    border-right: 1px solid #e7e7e7;
 }
 
 .playlist ul{
@@ -93,6 +94,9 @@
 
 
 /*===== QUIZ ===*/
+span.quiz-prefix::after {
+    content: ": ";
+}
 .quiz-area {
     background: black;
     border-bottom: 1px solid #e7e7e7;
@@ -134,21 +138,7 @@
 }
 
 
-/*==== MISC ==== */
-.toolbar{
-    display: flex;
-    justify-content: flex-end;
-    margin: .5em 0;
-    padding: .5em 0;
-}
-.toolbar .btn{
-    margin-left: .5em;
-    margin-right: .5em;
-}
-
-
-
-
+/*==== MARKDOWN ==== */
 .markdown-editor{
     background: #f4f4f4;
     display: flex;
@@ -203,6 +193,19 @@
 }
 
 
+
+/*==== MISC ==== */
+.toolbar{
+    display: flex;
+    justify-content: flex-end;
+    margin: .5em 0;
+    padding: .5em 0;
+    height: 48px;
+}
+.toolbar .btn{
+    margin-left: .5em;
+    margin-right: .5em;
+}
 .modal-dialog .modal-header,
 .modal-dialog .modal-body{
     text-align: center;

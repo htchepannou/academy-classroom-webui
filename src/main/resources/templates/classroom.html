@@ -16,7 +16,10 @@
 <div class="container">
     <div class="meta">
         <div class="title-row">
-            <h1 th:text="${segment.title}">Segment Title</h1>
+            <h1>
+                <span class="quiz-prefix" th:if="${quiz}" th:text="#{label.quiz}">Quiz</span>
+                <span th:text="${segment.title}">Segment Title</span>
+            </h1>
         </div>
         <div class="meta-row">
             <h2 th:text="${course.title}">Course Title</h2>
