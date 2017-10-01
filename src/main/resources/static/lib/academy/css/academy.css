@@ -1,21 +1,45 @@
-.btn {
-    text-transform: uppercase;
+/* ==== COURSE META ==== */
+.meta {
+    margin-bottom: 1em;
 }
 
-.content-and-playlist{
+.meta .title-row {
+    margin-bottom: 1em;
 }
-.content iframe.video {
-    width: 100%;
-    height: 400px;
-}
-
-.title {
-    margin-top: 0px;
+.meta .title-row h1{
+    margin: 0px;
+    padding: 0px;
+    font-size: 26px;
 }
 
+.meta .meta-row {
+    font-size: 15px;
+    display: flex;
+}
+.meta .meta-row h2 {
+    margin: 0px;
+    padding: 0px;
+    font-size: 15px;
+}
+
+
+/* ==== COURSE CONTENT ==== */
+.course {
+    border: 1px solid #e7e7e7;
+}
+
+
+
+/* ==== VIDEO ==== */
+.video-area {
+    border-bottom: 1px solid #e7e7e7;
+}
+
+
+/* ==== PLAYLIST ==== */
 .playlist{
     background: #f1f4f4;
-    padding: 1em;
+    padding: 1em 0 !important;
 }
 
 .playlist ul{
@@ -45,7 +69,7 @@
 }
 .playlist li .ok{
     color: darkgreen;
-    width: 1.5em;
+    width: 2em;
 }
 .playlist li .rank{
     margin-right: .25em;
@@ -55,43 +79,41 @@
     content: ".";
 }
 .playlist li .title{
-    width: 20em;
+    width: 30em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .playlist li .duration{
     width: 3em;
+    margin: 0 auto;
 }
 
-.notes {
-    margin: 1em 0;
-}
 
-.toolbar{
-    display: flex;
-    justify-content: flex-end;
-    margin: .5em 0;
-    padding: .5em 0;
+
+/*===== QUIZ ===*/
+.quiz-area {
     border-bottom: 1px solid #e7e7e7;
-}
-.toolbar .btn{
-    margin-left: .5em;
+    display: none;
 }
 
 .quiz {
-    border: 1px solid #e7e7e7;
-}
-.quiz .question {
-    text-align: center;
-    padding: 1em;
-}
-.quiz .description {
-    padding: 1em;
+    display: flex;
+    flex-direction: column;
 }
 
-.quiz .answer {
-    margin-left: 1em;
+.quiz .question {
+    text-align: center;
+    padding: 0;
+    margin: .5em 0;
+}
+
+.quiz .description {
+    padding: .5em;
+}
+
+.quiz .answers {
+    flex-grow: 2;
 }
 
 .quiz ul {
@@ -108,56 +130,73 @@
     width: 100%;
 }
 
-.quiz .markdown-container{
+
+/*==== MISC ==== */
+.toolbar{
     display: flex;
-    border: 1px solid darkgray;
-    height: 400px;
+    justify-content: flex-end;
+    margin: .5em 0;
+    padding: .5em 0;
+    height: 50px;
 }
-.quiz .markdown-container textarea {
+.toolbar .btn{
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+
+
+
+.markdown-editor{
+    background: #f4f4f4;
+    display: flex;
+    height: 100%;
+}
+.markdown-editor textarea {
     width: 50%;
     height: 100%;
 }
-.quiz .markdown-preview{
+.markdown-editor .markdown-preview{
     width: 50%;
     height: 100%;
     padding: 10px;
-    background: #f4f4f4;
     font-size: 14px;
 }
 
-.markdown-preview p{
+
+.markdown p{
     margin: 0 0 5px 0;
 }
-.markdown-preview h1{
+.markdown h1{
     font-size: 18px;
 }
-.markdown-preview h2{
+.markdown h2{
     font-size: 16px;
 }
-.markdown-preview h3{
+.markdown h3{
     font-size: 15px;
 }
-.markdown-preview h4{
+.markdown h4{
     font-size: 14px;
 }
-.markdown-preview ul{
+.markdown ul{
     margin-bottom: 5px;
     list-style: square;
 }
-.markdown-preview li{
+.markdown li{
     list-style: square !important;
     margin: 0 0 5px 0 !important;
 }
 
-.markdown-preview h1,
-.markdown-preview h2,
-.markdown-preview h3,
-.markdown-preview h4{
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4{
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.markdown-preview pre {
+.markdown pre {
     background: white;
 }
 
@@ -167,5 +206,3 @@
     text-align: center;
 }
 
-
-/*====== MARKDOWN =====*/

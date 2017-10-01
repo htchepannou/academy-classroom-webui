@@ -14,8 +14,7 @@
 </head>
 <body>
 
-<div class="playlist" th:fragment="playlist">
-    <h4 class="title" th:text="${lesson.rank} + '. ' + ${lesson.title}">#</h4>
+<div th:fragment="playlist">
     <ul>
         <a th:each="item:${segments}" th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
             <li th:classappend="${item} == ${segment} ? active : ''">
@@ -39,18 +38,10 @@
     </div>
 </div>
 
-<div th:fragment="video">
-    <div class="embed-responsive embed-responsive-16by9">
-        <div id="video-player" class="embed-responsive-item"></div>
-    </div>
-    <div class="toolbar">
-        <a class="btn btn-default" th:text="#{button.next}" th:attr="href=${nextUrl}">...</a>
-    </div>
 
-    <h2 class="title" th:text="${segment.title}">Segment Title</h2>
-    <div class="notes">
-        <div class="markdown" th:utext="${segment.description}">Description here...</div>
-    </div>
+
+<div class="embed-responsive embed-responsive-16by9" th:fragment="video">
+    <div id="video-player" class="embed-responsive-item"></div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script th:inline="javascript">
@@ -81,30 +72,21 @@
     </script>
 </div>
 
-<div th:fragment="quiz">
+<div class="embed-responsive embed-responsive-16by9" th:fragment="quiz">
+    <!-- Quiz -->
     <form id="quizform">
-        <div class="quiz">
-            <h3 class="question" th:text="${quiz.question}">Question Here</h3>
-            <div class="markdown description" th:utext="${quiz.description}" th:if="${quiz.description}">Description here...</div>
-            <div class="answers">
-                <div th:replace="fragments/quiz :: ${quiz.type}">QUIZ</div>
+        <div class="embed-responsive-item quiz">
+            <h3 class="question" th:text="${quiz.question}">Quiz Question</h3>
+            <div class="markdown description" th:utext="${quiz.description}" th:if="${quiz.description}">Quiz Description</div>
+            <div class="answers" th:replace="fragments/quiz :: ${quiz.type}">
+                ANSWERS
+            </div>
+            <div class="toolbar">
+                <a class="btn btn-primary" th:text="#{button.submit_answer}" onclick="submit()">...</a>
+                <a class="btn btn-default" th:text="#{button.skip_quiz}" th:attr="href=${nextUrl}">...</a>
             </div>
         </div>
-
-        <div class="toolbar">
-            <a class="btn btn-primary" th:text="#{button.submit_answer}" onclick="submit()">...</a>
-            <a class="btn btn-default" th:text="#{button.skip_quiz}" th:attr="href=${nextUrl}">...</a>
-        </div>
-
-        <h2 class="title" th:text="${segment.title}">Segment Title</h2>
-        <div class="notes">
-            <div class="markdown" th:utext="${segment.description}">Description here...</div>
-        </div>
     </form>
-
-    <div class="notes">
-        <div class="markdown" th:utext="${segment.description}">Description here...</div>
-    </div>
 
     <!-- Success -->
     <div class="modal fade" id="modal_success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

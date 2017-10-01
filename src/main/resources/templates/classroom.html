@@ -9,24 +9,40 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-default" th:replace="fragments/layout :: topnav">
-        NAVIGATION
-    </nav>
+<nav class="navbar navbar-default" th:replace="fragments/layout :: topnav">
+    NAVIGATION
+</nav>
 
-    <div class="container">
-        <h1 class="title" th:text="${course.title}">Title</h1>
+<div class="container">
+    <div class="meta">
+        <div class="title-row">
+            <h1 th:text="${segment.title}">Segment Title</h1>
+        </div>
+        <div class="meta-row">
+            <h2 th:text="${course.title}">Course Title</h2>
+        </div>
+    </div>
+    <div class="course">
+        <div class="video-area" th:if="${video}">
+            <div th:replace="fragments/classroom :: video" >Video</div>
+        </div>
+        <div class="quiz-area" th:if="${quiz}">
+            <div th:replace="fragments/classroom :: quiz">QUIZ</div>
+        </div>
 
-        <div class="row content-and-playlist">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="playlist col-md-4 hidden-xs hidden-sm">
+                    <div th:replace="fragments/classroom :: playlist">Playlist</div>
+                </div>
 
-            <div class="col-md-4 hidden-xs hidden-sm">
-                <div th:replace="fragments/classroom :: playlist">PLAYLIST</div>
-            </div>
-
-            <div class="col-md-8 content">
-                <div th:replace="fragments/classroom :: ${segment.type}">CONTENT</div>
+                <div class="col-md-8">
+                    <div class="markdown" th:utext="${segment.description}">Segment Description</div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>

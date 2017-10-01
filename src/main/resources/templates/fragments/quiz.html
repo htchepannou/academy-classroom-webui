@@ -15,7 +15,7 @@
 <body>
 
 
-<div th:fragment="singlechoice">
+<div class="answers" th:fragment="singlechoice">
     <ul>
         <li th:each="choice:${quiz.choices}">
             <input type="radio" name="value" th:attr="value=${choice.id}"/>
@@ -23,7 +23,7 @@
         </li>
     </ul>
 </div>
-<div th:fragment="multichoice">
+<div class="answers" th:fragment="multichoice">
     <ul>
         <li th:each="choice:${quiz.choices}">
             <input type="checkbox" name="value" th:attr="value=${choice.id}"/>
@@ -31,17 +31,15 @@
         </li>
     </ul>
 </div>
-<div th:fragment="string">
+<div class="answers" th:fragment="string">
     <input type="text" name="value" />
 </div>
-<div th:fragment="text">
+<div class="answers" th:fragment="text">
     <textarea name="value" rows="5"></textarea>
 </div>
-<div th:fragment="markdown">
-    <div class="markdown-container">
-        <textarea id="markdown-input" name="value" rows="5"></textarea>
-        <div id="markdown-preview" class="markdown-preview"></div>
-    </div>
+<div class="answers markdown-editor" th:fragment="markdown">
+    <textarea id="markdown-input" name="value"></textarea>
+    <div id="markdown-preview" class="markdown-preview markdown"></div>
 
     <script src="/static/lib/showdown/1.0.2/js/showdown.min.js"></script>
     <script th:inline="javascript">

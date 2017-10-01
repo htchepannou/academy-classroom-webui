@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${course.title}">Title</title>
+    <meta name="og:title" th:attr="content=${course.title}"/>
+    <meta name="og:description" th:attr="content=${course.summary}"/>
+
+    <div th:replace="fragments/layout :: head"></div>
+</head>
+<body>
+
+    <nav class="navbar navbar-default" th:replace="fragments/layout :: topnav">
+        NAVIGATION
+    </nav>
+
+    <div class="container">
+        <h1 class="title" th:text="${course.title}">Title</h1>
+
+        <div class="row content-and-playlist">
+
+            <div class="col-md-4 hidden-xs hidden-sm">
+                <div th:replace="fragments/classroom :: playlist">PLAYLIST</div>
+            </div>
+
+            <div class="col-md-8 content">
+                <div th:replace="fragments/classroom :: ${segment.type}">CONTENT</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
