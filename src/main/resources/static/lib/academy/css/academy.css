@@ -28,7 +28,13 @@
     border: 1px solid #e7e7e7;
 }
 
+.course-details{
+    padding-top: 1em;
+}
 
+.tab-content > div {
+    padding-top: 1em;
+}
 
 /* ==== VIDEO ==== */
 .video-area {
@@ -121,6 +127,7 @@ span.quiz-prefix::after {
 
 .quiz .answers {
     flex-grow: 2;
+    padding: 2px;
 }
 
 .quiz ul {
@@ -204,7 +211,6 @@ span.quiz-prefix::after {
 }
 .toolbar .btn{
     margin-left: .5em;
-    margin-right: .5em;
 }
 .modal-dialog .modal-header,
 .modal-dialog .modal-body{
