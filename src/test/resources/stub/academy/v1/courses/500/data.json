@@ -9,6 +9,21 @@
     "level": "beginner",
     "status": "published",
     "publishedDateTime": "2017-09-08T15:17:53-0400",
-    "updatedDateTime": "2017-09-08T15:17:53-0400"
+    "updatedDateTime": "2017-09-08T15:17:53-0400",
+    "lessons": [
+      {
+        "id": 501,
+        "title": "Using SELECT",
+        "rank": 1,
+        "segments": [
+          {
+            "id": 50101,
+            "type": "text",
+            "title": "What is SQL",
+            "rank": 1
+          }
+        ]
+      }
+    ]
   }
 }

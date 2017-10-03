@@ -10,6 +10,103 @@
     "level": "all",
     "status": "published",
     "publishedDateTime": "2017-09-08T15:17:53-0400",
-    "updatedDateTime": "2017-09-08T15:17:53-0400"
+    "updatedDateTime": "2017-09-08T15:17:53-0400",
+    "lessons": [
+      {
+        "id": 101,
+        "title": "Writing READMEs",
+        "rank": 1,
+        "segments": [
+          {
+            "id": 10101,
+            "type": "video",
+            "title": "Welcome",
+            "rank": 1
+          },
+          {
+            "id": 10102,
+            "type": "text",
+            "title": "Markdown Syntax",
+            "rank": 2,
+            "summary":"Sample summary #2",
+            "description":"Sample description #2"
+          },
+          {
+            "id": 10103,
+            "type": "quiz",
+            "title": "Quiz: Who Is Documentation For?",
+            "rank": 3
+          },
+          {
+            "id": 10104,
+            "type": "video",
+            "title": "How Does Nija Consume Documentation?",
+            "rank": 4
+          },
+          {
+            "id": 10105,
+            "type": "video",
+            "title": "Why Should Art Have Documented His Code?",
+            "rank": 5
+          },
+          {
+            "id": 10106,
+            "type": "quiz",
+            "title": "Quiz: Introduction To READMEs",
+            "rank": 6
+          },
+          {
+            "id": 10107,
+            "type": "video",
+            "title": "Anatomy of README",
+            "rank": 7
+          },
+          {
+            "id": 10108,
+            "type": "quiz",
+            "title": "Quiz: Documenting A Growing Codebase",
+            "rank": 9
+          },
+          {
+            "id": 10109,
+            "type": "video",
+            "title": "Readable READMEs with Markdown",
+            "rank": 9
+          },
+          {
+            "id": 10110,
+            "type": "text",
+            "title": "Basic Markdown Syntax",
+            "rank": 10
+          },
+          {
+            "id": 10111,
+            "type": "quiz",
+            "quizId": 10111,
+            "videoId": 10111,
+            "title": "Readable READMEs with Markdown",
+            "rank": 11,
+            "summary":"Sample summary #11",
+            "description":"Sample description #11"
+          },
+          {
+            "id": 10112,
+            "type": "video",
+            "title": "Markdown Syntax Practice",
+            "rank": 12,
+            "videoId": 10112,
+            "durationSecond": 74,
+            "summary":"Sample summary",
+            "description":"Sample description"
+          },
+          {
+            "id": 10113,
+            "type": "video",
+            "title": "Document Everything!",
+            "rank": 13
+          }
+        ]
+      }
+    ]
   }
 }

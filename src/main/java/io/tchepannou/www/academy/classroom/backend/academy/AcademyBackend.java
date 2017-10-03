@@ -18,26 +18,6 @@ public class AcademyBackend extends Backend{
         return http.get(uri, CourseResponse.class);
     }
 
-//    public LessonListResponse findLessonsByCourseId(final Integer courseId){
-//        final String uri = String.format("%s/academy/v1/courses/%s/lessons", getUrl(), courseId);
-//        return http.get(uri, LessonListResponse.class);
-//    }
-//
-//    public SegmentListResponse findSegmentsByCourseIdByLessonId(final Integer courseId, final Integer lessonId){
-//        final String uri = String.format("%s/academy/v1/courses/%s/segments?lessonId=%s", getUrl(), courseId, lessonId);
-//        return http.get(uri, SegmentListResponse.class);
-//    }
-//
-//    public LessonResponse findLessonById(final Integer courseId, final Integer lessonId){
-//        final String uri = String.format("%s/academy/v1/courses/%s/lessons/%s", getUrl(), courseId, lessonId);
-//        return http.get(uri, LessonResponse.class);
-//    }
-//
-//    public SegmentResponse findSegmentById(final Integer courseId, final Integer segmentId){
-//        final String uri = String.format("%s/academy/v1/courses/%s/segments/%s", getUrl(), courseId, segmentId);
-//        return http.get(uri, SegmentResponse.class);
-//    }
-
     public VideoResponse findVideoById(final Integer videoId){
         final String uri = String.format("%s/academy/v1/videos/%s", getUrl(), videoId);
         return http.get(uri, VideoResponse.class);
