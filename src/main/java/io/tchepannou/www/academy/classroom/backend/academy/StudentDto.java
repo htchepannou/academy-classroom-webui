@@ -1,18 +1,15 @@
 package io.tchepannou.www.academy.classroom.backend.academy;
 
-import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("CPD-START")
-public class CourseAttendanceDto {
+public class StudentDto {
     private Integer id;
-    private Integer studentId;
+    private Integer roleId;
     private Integer courseId;
-    private Integer currentSegmentId;
-    private Date attendanceDateTime;
-    private List<SegmentAttendanceDto> segments;
     private Integer courseSegmentCount;
     private Integer attendedSegmentCount;
+    private List<StudentSegmentDto> segments;
 
     public Integer getId() {
         return id;
@@ -22,12 +19,12 @@ public class CourseAttendanceDto {
         this.id = id;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setStudentId(final Integer studentId) {
-        this.studentId = studentId;
+    public void setRoleId(final Integer roleId) {
+        this.roleId = roleId;
     }
 
     public Integer getCourseId() {
@@ -38,27 +35,11 @@ public class CourseAttendanceDto {
         this.courseId = courseId;
     }
 
-    public Integer getCurrentSegmentId() {
-        return currentSegmentId;
-    }
-
-    public void setCurrentSegmentId(final Integer currentSegmentId) {
-        this.currentSegmentId = currentSegmentId;
-    }
-
-    public Date getAttendanceDateTime() {
-        return attendanceDateTime;
-    }
-
-    public void setAttendanceDateTime(final Date attendanceDateTime) {
-        this.attendanceDateTime = attendanceDateTime;
-    }
-
-    public List<SegmentAttendanceDto> getSegments() {
+    public List<StudentSegmentDto> getSegments() {
         return segments;
     }
 
-    public void setSegments(final List<SegmentAttendanceDto> segments) {
+    public void setSegments(final List<StudentSegmentDto> segments) {
         this.segments = segments;
     }
 

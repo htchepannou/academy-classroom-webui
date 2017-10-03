@@ -23,18 +23,21 @@ public class AcademyBackend extends Backend{
         return http.get(uri, VideoResponse.class);
     }
 
-    public void done(final Integer studentId, final Integer segmentId){
+    public void updateStudent(final Integer courseId, final Integer segmentId, final Integer roleId){
         try {
-            final String uri = String.format("%s/academy/v1/attendances/students/%s/segments/%s/done", getUrl(), studentId, segmentId);
-            http.post(uri);
+            final String uri = String.format("%s/academy/v1/courses/%s/students", getUrl(), courseId);
+            final StudentRequest request = new StudentRequest();
+            request.setRoleId(roleId);
+            request.setSegmentId(segmentId);
+            http.post(uri, request, StudentResponse.class);
         } catch (Exception e){
-            LOGGER.error("Unable to send DONE event", e);
+            LOGGER.error("Unable to update student", e);
         }
     }
 
-    public AttendanceResponse findAttendance(final Integer studentId, final Integer courseId){
-        final String uri = String.format("%s/academy/v1/attendances/students/%s/courses/%s", getUrl(), studentId, courseId);
-        return http.get(uri, AttendanceResponse.class);
+    public StudentResponse findStudent(final Integer courseId, final Integer roleId){
+        final String uri = String.format("%s/academy/v1/courses/%s/students/%s", getUrl(), courseId, roleId);
+        return http.get(uri, StudentResponse.class);
     }
 
     public QuizResponse findQuizById(final Integer id){

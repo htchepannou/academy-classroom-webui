@@ -1,10 +1,11 @@
 package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.backend.academy.AcademyBackend;
-import io.tchepannou.www.academy.classroom.backend.academy.CourseAttendanceDto;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizAnswerResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.StudentDto;
+import io.tchepannou.www.academy.classroom.backend.academy.StudentResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -100,8 +102,8 @@ public class ClassroomController {
         final List<SegmentModel> segments = course.getLesson(lessonId).getSegments();
 
         // Event
-//        final SessionModel session = sessionProvider.getCurrentSession(request);
-//        academyBackend.done(session.getRoleId(), segmentId);
+        final SessionModel session = sessionProvider.getCurrentSession(request);
+        academyBackend.updateStudent(courseId, segmentId, session.getRoleId());
 
         // Next URL
         final String nextUrl = getNextUrl(courseId, lessonId, segmentId, lessons, segments);
@@ -117,8 +119,8 @@ public class ClassroomController {
             final HttpServletRequest request
     ){
         final SessionModel session = sessionProvider.getCurrentSession(request);
-        final CourseAttendanceDto attendance = academyBackend.findAttendance(session.getRoleId(), courseId).getAttendance();
-        if (attendance.getAttendedSegmentCount() < attendance.getCourseSegmentCount()){
+        final StudentDto student = academyBackend.findStudent(courseId, session.getRoleId()).getStudent();
+        if (student.getAttendedSegmentCount() < student.getCourseSegmentCount()){
             return "redirect:/classroom/" + courseId;
         }
 
@@ -161,14 +163,13 @@ public class ClassroomController {
         }
 
         // Attendance
-//        final SessionModel session = sessionProvider.getCurrentSession(request);
-//        try {
-//            final Integer studentId = session.getRoleId();
-//            final AttendanceResponse response = academyBackend.findAttendance(studentId, course.getId());
-//            updateAttendance(segments, response.getAttendance());
-//        } catch (Exception e){
-//            LOGGER.warn("Unable to load the course attendance", e);
-//        }
+        final SessionModel session = sessionProvider.getCurrentSession(request);
+        try {
+            final StudentResponse response = academyBackend.findStudent(course.getId(), session.getRoleId());
+            updateAttendance(course, response.getStudent());
+        } catch (Exception e){
+            LOGGER.warn("Unable to load the course attendance", e);
+        }
 
         // Next URL
         model.addAttribute("nextUrl", String.format("/classroom/%s/%s/%s/done", course.getId(), lesson.getId(), segment.getId()));
@@ -203,12 +204,15 @@ public class ClassroomController {
         return "/classroom/" + courseId + "/done";
     }
 
-    private void updateAttendance(final List<SegmentModel> segments, final CourseAttendanceDto attendance) {
-        final List<Integer> attendedSegmentId = attendance.getSegments().stream()
+    private void updateAttendance(final CourseModel course, final StudentDto studentDto) {
+        final Set<Integer> segmentIds = studentDto.getSegments().stream()
                 .map(s -> s.getSegmentId())
-                .collect(Collectors.toList());
-        for (final SegmentModel segment : segments){
-            segment.setAttended(attendedSegmentId.contains(segment.getId()));
+                .collect(Collectors.toSet());
+
+        for (final LessonModel lesson : course.getLessons()){
+            for (final SegmentModel segment : lesson.getSegments()){
+                segment.setAttended(segmentIds.contains(segment.getId()));
+            }
         }
     }
 
