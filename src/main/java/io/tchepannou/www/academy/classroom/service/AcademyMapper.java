@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.stream.Collectors;
 
 @Component
 public class AcademyMapper {
@@ -55,6 +56,13 @@ public class AcademyMapper {
         model.setTitle(dto.getTitle());
         model.setUpdatedDateTime(dto.getUpdatedDateTime());
 
+        if (dto.getLessons() != null){
+            model.setLessons(
+                    dto.getLessons().stream()
+                        .map(l -> toLessonModel(l))
+                        .collect(Collectors.toList())
+            );
+        }
         return model;
     }
 
@@ -64,6 +72,14 @@ public class AcademyMapper {
         model.setId(dto.getId());
         model.setRank(dto.getRank());
         model.setTitle(dto.getTitle());
+
+        if (dto.getSegments() != null){
+            model.setSegments(
+                    dto.getSegments().stream()
+                        .map(s -> toSegmentModel(s))
+                        .collect(Collectors.toList())
+            );
+        }
         return model;
     }
 

@@ -1,6 +1,8 @@
 package io.tchepannou.www.academy.classroom.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CourseModel extends BaseModel {
     private String title;
@@ -11,6 +13,14 @@ public class CourseModel extends BaseModel {
     private String status;
     private Date publishedDateTime;
     private Date updatedDateTime;
+    private List<LessonModel> lessons = new ArrayList<>();
+
+    public LessonModel getLesson(Integer lessonId){
+        return lessons.stream()
+                .filter(l -> lessonId.equals(l.getId()))
+                .findFirst()
+                .orElse(null);
+    }
 
     public String getTitle() {
         return title;
@@ -74,5 +84,13 @@ public class CourseModel extends BaseModel {
 
     public void setUpdatedDateTime(final Date updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
+    }
+
+    public List<LessonModel> getLessons() {
+        return lessons;
+    }
+
+    public void setLessons(final List<LessonModel> lessons) {
+        this.lessons = lessons;
     }
 }

@@ -1,16 +1,10 @@
 package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.backend.academy.AcademyBackend;
-import io.tchepannou.www.academy.classroom.backend.academy.AttendanceResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseAttendanceDto;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.LessonListResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.LessonResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizAnswerResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.SegmentDto;
-import io.tchepannou.www.academy.classroom.backend.academy.SegmentListResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.SegmentResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
@@ -81,7 +75,10 @@ public class ClassroomController {
             @PathVariable final Integer segmentId,
             final HttpServletRequest request
     ){
-        final SegmentDto segment = academyBackend.findSegmentById(courseId, segmentId).getSegment();
+        final CourseModel course = getCourse(courseId);
+        final LessonModel lesson = course.getLesson(lessonId);
+        final SegmentModel segment = lesson.getSegment(segmentId);
+
         final String[] values = request.getParameterValues("value");
         final QuizAnswerResponse response = academyBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
 
@@ -98,13 +95,15 @@ public class ClassroomController {
             @PathVariable final Integer segmentId,
             final HttpServletRequest request
     ){
+        final CourseModel course = getCourse(courseId);
+        final List<LessonModel> lessons = course.getLessons();
+        final List<SegmentModel> segments = course.getLesson(lessonId).getSegments();
+
         // Event
-        final SessionModel session = sessionProvider.getCurrentSession(request);
-        academyBackend.done(session.getRoleId(), segmentId);
+//        final SessionModel session = sessionProvider.getCurrentSession(request);
+//        academyBackend.done(session.getRoleId(), segmentId);
 
         // Next URL
-        final List<LessonModel> lessons = loadLessons(courseId);
-        final List<SegmentModel> segments = loadSegments(courseId, lessonId);
         final String nextUrl = getNextUrl(courseId, lessonId, segmentId, lessons, segments);
 
         LOGGER.info("Redirecting to {}", nextUrl);
@@ -142,14 +141,11 @@ public class ClassroomController {
         model.addAttribute("course", course);
 
         // Current lesson
-        final List<LessonModel> lessons = loadLessons(course.getId());
-        final LessonModel lesson = getLesson(courseId, lessonId, lessons);
+        final LessonModel lesson = lessonId == null ? course.getLessons().get(0) : course.getLesson(lessonId);
         model.addAttribute("lesson", lesson);
 
         // Current Segment
-        final List<SegmentModel> segments = loadSegments(courseId, lesson.getId());
-        final SegmentModel segment = getSegment(courseId, segmentId, segments);
-        model.addAttribute("segments", segments);
+        final SegmentModel segment = segmentId == null ? lesson.getSegments().get(0) : lesson.getSegment(segmentId);
         model.addAttribute("segment", segment);
 
         // Video
@@ -165,14 +161,14 @@ public class ClassroomController {
         }
 
         // Attendance
-        final SessionModel session = sessionProvider.getCurrentSession(request);
-        try {
-            final Integer studentId = session.getRoleId();
-            final AttendanceResponse response = academyBackend.findAttendance(studentId, course.getId());
-            updateAttendance(segments, response.getAttendance());
-        } catch (Exception e){
-            LOGGER.warn("Unable to load the course attendance", e);
-        }
+//        final SessionModel session = sessionProvider.getCurrentSession(request);
+//        try {
+//            final Integer studentId = session.getRoleId();
+//            final AttendanceResponse response = academyBackend.findAttendance(studentId, course.getId());
+//            updateAttendance(segments, response.getAttendance());
+//        } catch (Exception e){
+//            LOGGER.warn("Unable to load the course attendance", e);
+//        }
 
         // Next URL
         model.addAttribute("nextUrl", String.format("/classroom/%s/%s/%s/done", course.getId(), lesson.getId(), segment.getId()));
@@ -230,36 +226,6 @@ public class ClassroomController {
         return academyMapper.toCourseModel(response.getCourse());
     }
 
-    private LessonModel getLesson(final Integer courseId, final Integer lessonId, final List<LessonModel> lessons){
-        if (lessonId != null){
-            final LessonResponse response = academyBackend.findLessonById(courseId, lessonId);
-            return academyMapper.toLessonModel(response.getLesson());
-        } else {
-            return lessons.get(0);
-        }
-    }
-
-    private List<LessonModel> loadLessons(final Integer courseId){
-        final LessonListResponse response = academyBackend.findLessonsByCourseId(courseId);
-        return response.getLessons().stream()
-                .map(s -> academyMapper.toLessonModel(s))
-                .collect(Collectors.toList());
-    }
-
-    private List<SegmentModel> loadSegments(final Integer courseId, final Integer lessonId){
-        final SegmentListResponse response = academyBackend.findSegmentsByCourseIdByLessonId(courseId, lessonId);
-        return response.getSegments().stream()
-                .map(s -> academyMapper.toSegmentModel(s))
-                .collect(Collectors.toList());
-    }
-
-    private SegmentModel getSegment(final Integer courseId, final Integer segmentId, final List<SegmentModel> segments){
-        final Integer id = segmentId == null ? segments.get(0).getId() : segmentId;
-
-        final SegmentResponse response = academyBackend.findSegmentById(courseId, id);
-        return academyMapper.toSegmentModel(response.getSegment());
-
-    }
 
     private VideoModel getVideo(final SegmentModel segment){
         return getVideo(segment.getVideoId());

@@ -4,7 +4,6 @@ package io.tchepannou.www.academy.classroom.backend.academy;
 public class SegmentDto {
     private Integer id;
     private Integer videoId;
-    private Integer lessonId;
     private Integer quizId;
     private String type;
     private String title;
@@ -75,14 +74,6 @@ public class SegmentDto {
 
     public void setDescription(final String description) {
         this.description = description;
-    }
-
-    public Integer getLessonId() {
-        return lessonId;
-    }
-
-    public void setLessonId(final Integer lessonId) {
-        this.lessonId = lessonId;
     }
 
     public Integer getDurationSecond() {

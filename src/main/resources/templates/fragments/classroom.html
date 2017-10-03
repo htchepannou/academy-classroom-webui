@@ -15,19 +15,22 @@
 <body>
 
 <div th:fragment="playlist">
-    <ul>
-        <a th:each="item:${segments}" th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
-            <li th:classappend="${item} == ${segment} ? active : ''">
-                <div class="ok"><i class="glyphicon glyphicon-ok" th:if="${item.attended}"></i></div>
-                <div class="rank"  th:text="${item.rank}"></div>
-                <div class="title" >
-                    <span class="quiz-prefix" th:if="${item.type} == 'quiz'" th:text="#{label.quiz}">Quiz:</span>
-                    <span th:text="${item.title}">Segment Title</span>
-                </div>
-                <div class="duration" th:text="${item.durationFormatted}">01:30</div>
-            </li>
-        </a>
-    </ul>
+    <div th:each="l:${course.lessons}">
+        <div th:text="${l.title}" class="lesson-title">Lesson</div>
+        <ul>
+            <a th:each="item:${l.segments}" th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
+                <li th:classappend="${item} == ${segment} ? active : ''">
+                    <div class="ok"><i class="glyphicon glyphicon-ok" th:if="${item.attended}"></i></div>
+                    <div class="rank"  th:text="${item.rank}"></div>
+                    <div class="title" >
+                        <span class="quiz-prefix" th:if="${item.type} == 'quiz'" th:text="#{label.quiz}">Quiz:</span>
+                        <span th:text="${item.title}">Segment Title</span>
+                    </div>
+                    <div class="duration" th:text="${item.durationFormatted}">01:30</div>
+                </li>
+            </a>
+        </ul>
+    </div>
 </div>
 
 <div th:fragment="text">
