@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,13 +76,12 @@ public class ClassroomController {
             @PathVariable final Integer courseId,
             @PathVariable final Integer lessonId,
             @PathVariable final Integer segmentId,
-            final HttpServletRequest request
+            @RequestParam final String[] values
     ){
         final CourseModel course = getCourse(courseId);
         final LessonModel lesson = course.getLesson(lessonId);
         final SegmentModel segment = lesson.getSegment(segmentId);
 
-        final String[] values = request.getParameterValues("value");
         final QuizAnswerResponse response = academyBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
 
         final QuizValidationResultModel result = new QuizValidationResultModel();

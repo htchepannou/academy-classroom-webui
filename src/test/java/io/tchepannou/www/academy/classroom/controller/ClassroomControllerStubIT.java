@@ -3,6 +3,7 @@ package io.tchepannou.www.academy.classroom.controller;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.QuizModel;
+import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.support.jetty.HandlerStub;
@@ -209,6 +210,16 @@ public class ClassroomControllerStubIT {
     }
 
     @Test
+    public void shouldAnswerQuiz() throws Exception {
+        // When
+        final QuizValidationResultModel result = controller.answer(100, 101, 10111, new String[] {"foo"});
+
+        // Then
+        assertThat(result.isValid()).isFalse();
+        assertThat(result.getMessage()).isEqualTo("Looser");
+    }
+
+    @Test
     public void shouldFinishSegment() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
@@ -239,7 +250,6 @@ public class ClassroomControllerStubIT {
         }
     }
 
-    // DONE
     @Test
     public void doneShouldRedirectToClassroomWhenAllSegmentNotDone() throws Exception {
         // GIVEN
@@ -267,6 +277,7 @@ public class ClassroomControllerStubIT {
         final CourseModel course = (CourseModel)model.get("course");
         assertThat(course.getId()).isEqualTo(500);
     }
+
 
     //-- private
     private void assertCourse(final CourseModel course){
