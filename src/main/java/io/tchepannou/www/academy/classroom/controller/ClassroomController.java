@@ -101,9 +101,13 @@ public class ClassroomController {
         final List<LessonModel> lessons = course.getLessons();
         final List<SegmentModel> segments = course.getLesson(lessonId).getSegments();
 
-        // Event
-        final SessionModel session = sessionProvider.getCurrentSession(request);
-        academyBackend.updateStudent(courseId, segmentId, session.getRoleId());
+        // Update studends
+        try {
+            final SessionModel session = sessionProvider.getCurrentSession(request);
+            academyBackend.updateStudent(courseId, segmentId, session.getRoleId());
+        } catch (Exception e){
+            LOGGER.warn("Unable to update the student", e);
+        }
 
         // Next URL
         final String nextUrl = getNextUrl(courseId, lessonId, segmentId, lessons, segments);
@@ -119,8 +123,14 @@ public class ClassroomController {
             final HttpServletRequest request
     ){
         final SessionModel session = sessionProvider.getCurrentSession(request);
-        final StudentDto student = academyBackend.findStudent(courseId, session.getRoleId()).getStudent();
-        if (student.getAttendedSegmentCount() < student.getCourseSegmentCount()){
+
+        try {
+            final StudentDto student = academyBackend.findStudent(courseId, session.getRoleId()).getStudent();
+            if (student.getAttendedSegmentCount() < student.getCourseSegmentCount()) {
+                return "redirect:/classroom/" + courseId;
+            }
+        } catch (Exception e){
+            LOGGER.warn("Unable to get the student", e);
             return "redirect:/classroom/" + courseId;
         }
 

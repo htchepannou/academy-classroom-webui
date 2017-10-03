@@ -15,6 +15,15 @@ import java.io.IOException;
 public class LoggerFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggerFilter.class);
 
+    private Logger logger;
+
+    public LoggerFilter(){
+        this(LOGGER);
+    }
+    protected LoggerFilter(Logger logger){
+        this.logger = logger;
+    }
+
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
 
@@ -32,7 +41,8 @@ public class LoggerFilter implements Filter {
 
     private void log(final HttpServletRequest request) throws IOException, ServletException {
         final String qs = request.getQueryString();
-        LOGGER.info("{} {}{}", request.getMethod(), request.getRequestURL(), qs == null ? "" : "?" + qs);
+        final String line = String.format("%s %s%s", request.getMethod(), request.getRequestURL(), qs == null ? "" : "?" + qs);
+        logger.info(line);
     }
 
     @Override

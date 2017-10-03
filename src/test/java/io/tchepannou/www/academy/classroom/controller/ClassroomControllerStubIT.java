@@ -10,7 +10,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,7 +222,6 @@ public class ClassroomControllerStubIT {
     }
 
     @Test
-    @Ignore
     public void shouldFlagAttendedSegments() throws Exception {
         // GIVEN
         final ExtendedModelMap model = new ExtendedModelMap();
@@ -232,7 +230,8 @@ public class ClassroomControllerStubIT {
         controller.index(100, model, request);
 
         // THEN
-        final List<SegmentModel> segments = (List)model.get("segments");
+        final CourseModel course = (CourseModel)model.get("course");
+        final List<SegmentModel> segments = course.getLessons().get(0).getSegments();
         assertThat(segments).hasSize(13);
         for (final SegmentModel seg : segments){
             int id = seg.getId();

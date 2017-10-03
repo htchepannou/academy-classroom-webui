@@ -1,5 +1,8 @@
 package io.tchepannou.www.academy.classroom.health;
 
+import io.tchepannou.www.academy.support.jetty.HandlerStub;
+import org.eclipse.jetty.server.Server;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
@@ -8,9 +11,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UrlHealthCheckTest {
 
+    private Server server;
+
+    @After
+    public void tearDown() throws Exception {
+        if (server != null){
+            stop(server);
+        }
+    }
+
     @Test
-    public void shouldBeUp() {
-        final String url = "http://www.google.ca";
+    public void shouldBeUp() throws Exception {
+        final int port = 18999;
+        server = start(port);
+
+        final String url = "http://localhost:" + port + "/echo";
         final UrlHealthCheck healthCheck = new UrlHealthCheck(url, 1000);
 
         final Health result = healthCheck.health();
@@ -46,4 +61,16 @@ public class UrlHealthCheckTest {
         assertThat(result.getDetails()).containsKey("error");
     }
 
+
+    private Server start(int port) throws Exception{
+        final Server server = new Server(port);
+        server.setHandler(new HandlerStub());
+        server.start();
+
+        return server;
+    }
+
+    private void stop(final Server server) throws Exception {
+        server.stop();
+    }
 }

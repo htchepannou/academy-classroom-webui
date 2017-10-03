@@ -1,8 +1,6 @@
 package io.tchepannou.www.academy.classroom.backend.academy;
 
 import io.tchepannou.www.academy.classroom.backend.Backend;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +9,6 @@ import java.util.List;
 @Component
 @ConfigurationProperties("application.backend.AcademyBackend")
 public class AcademyBackend extends Backend{
-    private static final Logger LOGGER = LoggerFactory.getLogger(AcademyBackend.class);
-
     public CourseResponse findCourseById(final Integer id) throws AcademyException{
         final String uri = String.format("%s/academy/v1/courses/%s", getUrl(), id);
         return http.get(uri, CourseResponse.class);
@@ -24,15 +20,11 @@ public class AcademyBackend extends Backend{
     }
 
     public void updateStudent(final Integer courseId, final Integer segmentId, final Integer roleId){
-        try {
-            final String uri = String.format("%s/academy/v1/courses/%s/students", getUrl(), courseId);
-            final StudentRequest request = new StudentRequest();
-            request.setRoleId(roleId);
-            request.setSegmentId(segmentId);
-            http.post(uri, request, StudentResponse.class);
-        } catch (Exception e){
-            LOGGER.error("Unable to update student", e);
-        }
+        final String uri = String.format("%s/academy/v1/courses/%s/students", getUrl(), courseId);
+        final StudentRequest request = new StudentRequest();
+        request.setRoleId(roleId);
+        request.setSegmentId(segmentId);
+        http.post(uri, request, StudentResponse.class);
     }
 
     public StudentResponse findStudent(final Integer courseId, final Integer roleId){
