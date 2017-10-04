@@ -50,6 +50,20 @@
     border-right: 1px solid #e7e7e7;
 }
 
+.playlist .lesson {
+    padding: 0 .1em;
+    border-top: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
+}
+.playlist .lesson:first-child {
+    border-top: 0;
+}
+
+.playlist .lesson-title {
+    margin: 0 .5em;
+    font-weight: bold;
+}
+
 .playlist ul{
     margin: 0;
     padding: 0;
@@ -199,9 +213,21 @@ span.quiz-prefix::after {
     background: white;
 }
 
+/*==== AUTHOR ==== */
+.author{
+    display: flex;
+}
 
+.author img{
+    width: 100px;
+    height: 100px;
+    padding: 1px;
+    border-radius: 50px;
+    border: 1px solid lightgray;
+    margin-right: 1em;
+}
 
-/*==== MISC ==== */
+    /*==== MISC ==== */
 .toolbar{
     display: flex;
     justify-content: flex-end;

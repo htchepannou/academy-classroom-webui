@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -211,8 +212,11 @@ public class ClassroomControllerStubIT {
 
     @Test
     public void shouldAnswerQuiz() throws Exception {
+        // Given
+        when (request.getParameterValues(anyString())).thenReturn(new String[] {"foo"});
+
         // When
-        final QuizValidationResultModel result = controller.answer(100, 101, 10111, new String[] {"foo"});
+        final QuizValidationResultModel result = controller.answer(100, 101, 10111, request);
 
         // Then
         assertThat(result.isValid()).isFalse();

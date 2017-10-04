@@ -2,14 +2,18 @@ package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.backend.academy.AcademyBackend;
 import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
+import io.tchepannou.www.academy.classroom.backend.academy.InstructorDto;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizAnswerResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.StudentDto;
 import io.tchepannou.www.academy.classroom.backend.academy.StudentResponse;
 import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
+import io.tchepannou.www.academy.classroom.backend.user.PersonResponse;
+import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
+import io.tchepannou.www.academy.classroom.model.PersonModel;
 import io.tchepannou.www.academy.classroom.model.QuizModel;
 import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
@@ -18,6 +22,7 @@ import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import io.tchepannou.www.academy.classroom.service.UrlProvider;
+import io.tchepannou.www.academy.classroom.service.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +30,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +46,13 @@ public class ClassroomController {
     private AcademyBackend academyBackend;
 
     @Autowired
+    private UserBackend userBackend;
+
+    @Autowired
     private AcademyMapper academyMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private UrlProvider urlProvider;
@@ -76,12 +86,13 @@ public class ClassroomController {
             @PathVariable final Integer courseId,
             @PathVariable final Integer lessonId,
             @PathVariable final Integer segmentId,
-            @RequestParam final String[] values
+            final HttpServletRequest request
     ){
         final CourseModel course = getCourse(courseId);
         final LessonModel lesson = course.getLesson(lessonId);
         final SegmentModel segment = lesson.getSegment(segmentId);
 
+        final String[] values = request.getParameterValues("value");
         final QuizAnswerResponse response = academyBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
 
         final QuizValidationResultModel result = new QuizValidationResultModel();
@@ -236,10 +247,20 @@ public class ClassroomController {
     }
 
     private CourseModel getCourse(final Integer id){
+        /* course */
         final CourseResponse response = academyBackend.findCourseById(id);
-        return academyMapper.toCourseModel(response.getCourse());
-    }
+        final CourseModel course = academyMapper.toCourseModel(response.getCourse());
 
+        /* Instructors */
+        List<InstructorDto> instructorDtos = response.getCourse().getInstructors();
+        if (instructorDtos != null && instructorDtos.size() > 0){
+            final PersonResponse personResponse = userBackend.findPersonByRole(instructorDtos.get(0).getRoleId());
+            final PersonModel instructor = userMapper.toPersonModel(personResponse.getPerson());
+            course.setInstructor(instructor);
+        }
+
+        return course;
+    }
 
     private VideoModel getVideo(final SegmentModel segment){
         return getVideo(segment.getVideoId());

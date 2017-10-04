@@ -15,7 +15,7 @@
 <body>
 
 <div th:fragment="playlist">
-    <div th:each="l:${course.lessons}">
+    <div class="lesson" th:each="l:${course.lessons}">
         <div th:text="${l.title}" class="lesson-title">Lesson</div>
         <ul>
             <a th:each="item:${l.segments}" th:attr="href='/classroom/' + ${course.id} + '/' + ${lesson.id} + '/' + ${item.id}">
