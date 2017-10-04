@@ -162,7 +162,7 @@ public class AcademyMapper {
             final NumberFormat fmt = new DecimalFormat("00");
 
             final int hour = durationSecond / 3600;
-            final int minute = (durationSecond / 60) % 60;
+            final int minute = (int)(.5 + (float)(durationSecond % 3600) / (float)60);
             return hour > 0
                     ? String.format("%sh %smin", fmt.format(hour), fmt.format(minute))
                     : String.format("%s min", fmt.format(minute));

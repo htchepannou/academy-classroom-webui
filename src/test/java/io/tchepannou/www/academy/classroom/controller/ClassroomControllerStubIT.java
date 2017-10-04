@@ -2,6 +2,7 @@ package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
+import io.tchepannou.www.academy.classroom.model.PersonModel;
 import io.tchepannou.www.academy.classroom.model.QuizModel;
 import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
@@ -143,6 +144,9 @@ public class ClassroomControllerStubIT {
         final LessonModel lesson = (LessonModel)model.get("lesson");
         assertLesson(lesson);
 
+        final PersonModel instructor = course.getInstructor();
+        assertInstructor(instructor);
+
         final SegmentModel segment = (SegmentModel)model.get("segment");
         assertThat(segment.getId()).isEqualTo(10112);
         assertThat(segment.getVideoId()).isEqualTo(10112);
@@ -151,8 +155,8 @@ public class ClassroomControllerStubIT {
         assertThat(segment.getType()).isEqualTo("video");
         assertThat(segment.getSummary()).isEqualTo("Sample summary");
         assertThat(segment.getDescription()).isEqualTo("<p>Sample description</p>\n");
-        assertThat(segment.getDurationSecond()).isEqualTo(74);
-        assertThat(segment.getDuration()).isEqualTo("01:14");
+        assertThat(segment.getDurationSecond()).isEqualTo(215);
+        assertThat(segment.getDuration()).isEqualTo("03:35");
 
         final VideoModel video = (VideoModel)model.get("video");
         assertThat(video.getId()).isEqualTo(10112);
@@ -292,11 +296,25 @@ public class ClassroomControllerStubIT {
         assertThat(course.getLanguage()).isEqualTo("en");
         assertThat(course.getLevel()).isEqualTo("all");
         assertThat(course.getStatus()).isEqualTo("published");
+        assertThat(course.getDuration()).isEqualTo("12 min");
     }
 
     private void assertLesson(final LessonModel lesson){
         assertThat(lesson.getId()).isEqualTo(101);
         assertThat(lesson.getTitle()).isEqualTo("Writing READMEs");
         assertThat(lesson.getRank()).isEqualTo(1);
+    }
+
+    private void assertInstructor(final PersonModel instructor){
+        assertThat(instructor.getId()).isEqualTo(100);
+        assertThat(instructor.getFirstName()).isEqualTo("Ray");
+        assertThat(instructor.getLastName()).isEqualTo("Sponsible");
+        assertThat(instructor.getEmail()).isEqualTo("ray.sponsible@gmail.com");
+        assertThat(instructor.getLanguage()).isEqualTo("en");
+        assertThat(instructor.getPictureUrl()).isEqualTo("http://img.com/ray.sponsible");
+        assertThat(instructor.getWebsiteUrl()).isEqualTo("https://www.facebook.com/ray.sponsible");
+        assertThat(instructor.getBiography()).isEqualTo("Bio...");
+        assertThat(instructor.getTitle()).isEqualTo("Joker");
+
     }
 }

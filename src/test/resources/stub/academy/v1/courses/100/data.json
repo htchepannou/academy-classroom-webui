@@ -11,6 +11,11 @@
     "status": "published",
     "publishedDateTime": "2017-09-08T15:17:53-0400",
     "updatedDateTime": "2017-09-08T15:17:53-0400",
+    "instructors": [
+      {
+        "roleId": 100
+      }
+    ],
     "lessons": [
       {
         "id": 101,
@@ -21,7 +26,8 @@
             "id": 10101,
             "type": "video",
             "title": "Welcome",
-            "rank": 1
+            "rank": 1,
+            "durationSecond": 54
           },
           {
             "id": 10102,
@@ -34,20 +40,24 @@
           {
             "id": 10103,
             "type": "quiz",
+            "videoId": 10103,
             "title": "Quiz: Who Is Documentation For?",
-            "rank": 3
+            "rank": 3,
+            "durationSecond": 15
           },
           {
             "id": 10104,
             "type": "video",
             "title": "How Does Nija Consume Documentation?",
-            "rank": 4
+            "rank": 4,
+            "durationSecond": 35
           },
           {
             "id": 10105,
             "type": "video",
             "title": "Why Should Art Have Documented His Code?",
-            "rank": 5
+            "rank": 5,
+            "durationSecond": 54
           },
           {
             "id": 10106,
@@ -59,7 +69,8 @@
             "id": 10107,
             "type": "video",
             "title": "Anatomy of README",
-            "rank": 7
+            "rank": 7,
+            "durationSecond": 215
           },
           {
             "id": 10108,
@@ -71,7 +82,8 @@
             "id": 10109,
             "type": "video",
             "title": "Readable READMEs with Markdown",
-            "rank": 9
+            "rank": 9,
+            "durationSecond": 13
           },
           {
             "id": 10110,
@@ -87,7 +99,8 @@
             "title": "Readable READMEs with Markdown",
             "rank": 11,
             "summary":"Sample summary #11",
-            "description":"Sample description #11"
+            "description":"Sample description #11",
+            "durationSecond": 75
           },
           {
             "id": 10112,
@@ -97,13 +110,15 @@
             "videoId": 10112,
             "durationSecond": 74,
             "summary":"Sample summary",
-            "description":"Sample description"
+            "description":"Sample description",
+            "durationSecond": 215
           },
           {
             "id": 10113,
             "type": "video",
             "title": "Document Everything!",
-            "rank": 13
+            "rank": 13,
+            "durationSecond": 15
           }
         ]
       }
