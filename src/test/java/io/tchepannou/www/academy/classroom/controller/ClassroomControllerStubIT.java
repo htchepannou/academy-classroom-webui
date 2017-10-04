@@ -152,7 +152,7 @@ public class ClassroomControllerStubIT {
         assertThat(segment.getSummary()).isEqualTo("Sample summary");
         assertThat(segment.getDescription()).isEqualTo("<p>Sample description</p>\n");
         assertThat(segment.getDurationSecond()).isEqualTo(74);
-        assertThat(segment.getDurationFormatted()).isEqualTo("01:14");
+        assertThat(segment.getDuration()).isEqualTo("01:14");
 
         final VideoModel video = (VideoModel)model.get("video");
         assertThat(video.getId()).isEqualTo(10112);

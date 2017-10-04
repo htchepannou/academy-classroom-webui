@@ -26,7 +26,7 @@
                         <span class="quiz-prefix" th:if="${item.type} == 'quiz'" th:text="#{label.quiz}">Quiz:</span>
                         <span th:text="${item.title}">Segment Title</span>
                     </div>
-                    <div class="duration" th:text="${item.durationFormatted}">01:30</div>
+                    <div class="duration" th:text="${item.duration}">01:30</div>
                 </li>
             </a>
         </ul>

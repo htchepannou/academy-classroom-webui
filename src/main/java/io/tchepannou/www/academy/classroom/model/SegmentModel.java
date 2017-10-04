@@ -11,7 +11,7 @@ public class SegmentModel extends BaseModel {
     private String description;
     private boolean attended;
     private Integer durationSecond;
-    private String durationFormatted;
+    private String duration;
 
 
     public Integer getVideoId() {
@@ -86,11 +86,11 @@ public class SegmentModel extends BaseModel {
         this.durationSecond = durationSecond;
     }
 
-    public String getDurationFormatted() {
-        return durationFormatted;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setDurationFormatted(final String durationFormatted) {
-        this.durationFormatted = durationFormatted;
+    public void setDuration(final String duration) {
+        this.duration = duration;
     }
 }

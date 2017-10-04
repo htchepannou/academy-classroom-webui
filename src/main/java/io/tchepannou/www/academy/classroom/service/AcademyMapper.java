@@ -45,6 +45,7 @@ public class AcademyMapper {
 
     public CourseModel toCourseModel(final CourseDto dto){
         final CourseModel model = new CourseModel();
+        final int durationSeconds = computeDurationSeconds(dto);
 
         model.setDescription(markdown2Html(dto.getDescription()));
         model.setId(dto.getId());
@@ -55,6 +56,7 @@ public class AcademyMapper {
         model.setSummary(dto.getSummary());
         model.setTitle(dto.getTitle());
         model.setUpdatedDateTime(dto.getUpdatedDateTime());
+        model.setDuration(formatHHMM(durationSeconds));
 
         if (dto.getLessons() != null){
             model.setLessons(
@@ -85,7 +87,6 @@ public class AcademyMapper {
 
     public SegmentModel toSegmentModel(final SegmentDto dto){
         final SegmentModel model = new SegmentModel();
-        final NumberFormat fmt = new DecimalFormat("00");
         final Integer durationSecond = dto.getDurationSecond();
 
         model.setId(dto.getId());
@@ -97,12 +98,8 @@ public class AcademyMapper {
         model.setVideoId(dto.getVideoId());
         model.setQuizId(dto.getQuizId());
         model.setDurationSecond(durationSecond);
+        model.setDuration(formatMMSS(durationSecond));
 
-        if (durationSecond != null) {
-            final int minute = durationSecond / 60;
-            final int seconds = durationSecond % 60;
-            model.setDurationFormatted(fmt.format(minute) + ':' + fmt.format(seconds));
-        }
         return model;
     }
 
@@ -139,6 +136,7 @@ public class AcademyMapper {
         model.setText(dto.getText());
         return model;
     }
+
     private String markdown2Html(final String text){
         if (StringUtils.isEmpty(text)){
             return null;
@@ -147,4 +145,41 @@ public class AcademyMapper {
         final Node document = markdownParser.parse(text);
         return markdownHtmlRenderer.render(document);
     }
+
+    private String formatMMSS(Integer durationSecond){
+        if (durationSecond != null) {
+            final NumberFormat fmt = new DecimalFormat("00");
+
+            final int minute = durationSecond / 60;
+            final int seconds = durationSecond % 60;
+            return fmt.format(minute) + ':' + fmt.format(seconds);
+        }
+        return null;
+    }
+
+    private String formatHHMM(Integer durationSecond){
+        if (durationSecond != null) {
+            final NumberFormat fmt = new DecimalFormat("00");
+
+            final int hour = durationSecond / 3600;
+            final int minute = (durationSecond / 60) % 60;
+            return hour > 0
+                    ? String.format("%sh %smin", fmt.format(hour), fmt.format(minute))
+                    : String.format("%s min", fmt.format(minute));
+        }
+        return null;
+    }
+
+    private int computeDurationSeconds(final CourseDto dto){
+        int durationSeconds = 0;
+        for (final LessonDto lesson : dto.getLessons()){
+            for (final SegmentDto segment : lesson.getSegments()){
+                if (segment.getDurationSecond() != null) {
+                    durationSeconds += segment.getDurationSecond();
+                }
+            }
+        }
+        return durationSeconds;
+    }
+
 }

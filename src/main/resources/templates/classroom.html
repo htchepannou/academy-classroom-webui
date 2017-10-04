@@ -72,25 +72,40 @@
                     </ul>
 
                     <div class="tab-content">
+
                         <div id="overview" class="tab-pane fade in active">
                             <div class="container-fluid">
+                                <div class="meta">
+                                    <span class="duration" th:text="${course.duration}">1h30</span>
+                                    -
+                                    <span class="level" th:text="#{'level.' + ${course.level}}">Debutant</span>
+                                    -
+                                    <span class="published-date" th:text="${#calendars.format(course.updatedDateTime,'dd MMMM yyyy')}">12 May 2014</span>
+                                </div>
                                 <div class="markdown" th:utext="${course.description}">Course Description</div>
                             </div>
                         </div>
+
                         <div id="author" class="tab-pane fade">
                             <div class="author">
                                 <img th:attr="src=${course.instructor.pictureUrl}" />
                                 <div>
                                     <h4 th:text="${course.instructor.displayName}">Ray Sponsible</h4>
                                     <h6 th:text="${course.instructor.title}">Software Developer</h6>
-
+                                    <div class="links">
+                                        <a th:attr="href=${course.instructor.websiteUrl}" th:text="#{label.website}">Website</a>
+                                        |
+                                        <a href="#" th:text="#{label.all_courses}">See All Courses</a>
+                                    </div>
                                     <div class="biography" th:text="${course.instructor.biography}">Biography</div>
                                 </div>
                             </div>
                         </div>
+
                         <div id="resources" class="tab-pane fade">
                             <div class="markdown" th:utext="${segment.description}">Segment Description</div>
                         </div>
+
                     </div>
 
                 </div>

@@ -227,7 +227,17 @@ span.quiz-prefix::after {
     margin-right: 1em;
 }
 
-    /*==== MISC ==== */
+.author h4,
+.author h6{
+    margin-top: 0;
+    margin-bottom: .3em;
+}
+.author .links {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+/*==== MISC ==== */
 .toolbar{
     display: flex;
     justify-content: flex-end;

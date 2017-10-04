@@ -15,6 +15,7 @@ public class CourseModel extends BaseModel {
     private Date updatedDateTime;
     private List<LessonModel> lessons = new ArrayList<>();
     private PersonModel instructor;
+    private String duration;
 
     public LessonModel getLesson(Integer lessonId){
         return lessons.stream()
@@ -101,5 +102,13 @@ public class CourseModel extends BaseModel {
 
     public void setInstructor(final PersonModel instructor) {
         this.instructor = instructor;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(final String duration) {
+        this.duration = duration;
     }
 }
