@@ -67,7 +67,7 @@
 
                     <ul class="nav nav-pills">
                         <li class="active"><a data-toggle="pill" href="#overview" th:text="#{label.overview}">Overview</a></li>
-                        <li><a data-toggle="pill" href="#author" th:text="#{label.author}">Author</a></li>
+                        <li><a data-toggle="pill" href="#instructor" th:text="#{label.instructor}">Instructor</a></li>
                         <li ><a data-toggle="pill" href="#resources" th:text="#{label.resources}">Resources</a></li>
                     </ul>
 
@@ -86,8 +86,8 @@
                             </div>
                         </div>
 
-                        <div id="author" class="tab-pane fade">
-                            <div class="author">
+                        <div id="instructor" class="tab-pane fade">
+                            <div class="instructor">
                                 <img th:attr="src=${course.instructor.pictureUrl}" />
                                 <div>
                                     <h4 th:text="${course.instructor.displayName}">Ray Sponsible</h4>

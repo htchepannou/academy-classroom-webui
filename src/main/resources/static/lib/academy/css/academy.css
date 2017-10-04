@@ -213,26 +213,26 @@ span.quiz-prefix::after {
     background: white;
 }
 
-/*==== AUTHOR ==== */
-.author{
+/*==== INSTRUCTOR ==== */
+.instructor{
     display: flex;
 }
 
-.author img{
+.instructor img{
     width: 100px;
     height: 100px;
     padding: 1px;
     border-radius: 50px;
-    border: 1px solid lightgray;
+    border: 1px solid #e7e7e7;
     margin-right: 1em;
 }
 
-.author h4,
-.author h6{
+.instructor h4,
+.instructor h6{
     margin-top: 0;
     margin-bottom: .3em;
 }
-.author .links {
+.instructor .links {
     margin-top: 0;
     margin-bottom: 1em;
 }
