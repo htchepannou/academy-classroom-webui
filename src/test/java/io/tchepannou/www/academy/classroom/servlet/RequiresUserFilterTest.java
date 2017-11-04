@@ -45,7 +45,7 @@ public class RequiresUserFilterTest {
     @Test
     public void shouldUnauthorizeUserWhenNoCurrentSession() throws Exception {
         // Given
-        when(sessionProvider.getCurrentSession(any())).thenThrow(new SessionException(1, ""));
+        when(sessionProvider.getCurrentSession(any())).thenThrow(new SessionException("failed"));
 
         // When
         filter.doFilter(request, response, chain);

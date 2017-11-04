@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest
 @ActiveProfiles(profiles = {"stub"})
 public class ClassroomControllerStubIT {
-    @Value("${application.backend.AcademyBackend.port}")
+    @Value("${application.backend.CourseBackend.port}")
     private int academyServerPort;
     private Server academyServer;
 

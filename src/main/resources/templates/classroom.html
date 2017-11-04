@@ -67,13 +67,20 @@
 
                     <ul class="nav nav-pills">
                         <li class="active"><a data-toggle="pill" href="#overview" th:text="#{label.overview}">Overview</a></li>
+                        <li><a data-toggle="pill" href="#resources" th:text="#{label.resources}">Resources</a></li>
+                        <li><a data-toggle="pill" href="#about" th:text="#{label.about}">About</a></li>
                         <li><a data-toggle="pill" href="#instructor" th:text="#{label.instructor}">Instructor</a></li>
-                        <li ><a data-toggle="pill" href="#resources" th:text="#{label.resources}">Resources</a></li>
                     </ul>
 
                     <div class="tab-content">
 
                         <div id="overview" class="tab-pane fade in active">
+                            <div class="container-fluid">
+                                <div class="markdown" th:utext="${segment.description}">Segment Description</div>
+                            </div>
+                        </div>
+
+                        <div id="about" class="tab-pane fade in">
                             <div class="container-fluid">
                                 <div class="meta">
                                     <span class="duration" th:text="${course.duration}">1h30</span>
@@ -93,7 +100,7 @@
                                     <h4 th:text="${course.instructor.displayName}">Ray Sponsible</h4>
                                     <h6 th:text="${course.instructor.title}">Software Developer</h6>
                                     <div class="links">
-                                        <a th:attr="href=${course.instructor.websiteUrl}" th:text="#{label.website}">Website</a>
+                                        <a target="_new" th:attr="href=${course.instructor.websiteUrl}" th:text="#{label.website}">Website</a>
                                         |
                                         <a href="#" th:text="#{label.all_courses}">See All Courses</a>
                                     </div>

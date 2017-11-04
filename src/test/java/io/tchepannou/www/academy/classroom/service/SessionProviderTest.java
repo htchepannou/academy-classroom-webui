@@ -1,9 +1,10 @@
 package io.tchepannou.www.academy.classroom.service;
 
+import io.tchepannou.rest.HttpNotFoundException;
+import io.tchepannou.rest.HttpUnauthorizedException;
 import io.tchepannou.www.academy.classroom.backend.user.AuthResponse;
 import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
-import io.tchepannou.www.academy.classroom.backend.user.UserException;
 import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import org.junit.Test;
@@ -118,11 +119,23 @@ public class SessionProviderTest {
                 createCookie("guid", "123"),
         });
 
-        when(userBackend.findSessionByToken("123")).thenThrow(new UserException(404, "test", new RuntimeException()));
+        when(userBackend.findSessionByToken("123")).thenThrow(new HttpNotFoundException("failed"));
 
         provider.getCurrentSession(request);
     }
 
+
+    @Test(expected = SessionException.class)
+    public void getCurrentSessionShouldThrowExceptionIfUnauthorized(){
+        when(request.getCookies()).thenReturn(new Cookie[]{
+                createCookie("foo", "bar"),
+                createCookie("guid", "123"),
+        });
+
+        when(userBackend.findSessionByToken("123")).thenThrow(new HttpUnauthorizedException("failed"));
+
+        provider.getCurrentSession(request);
+    }
 
     @Test
     public void getCurrentSessionShouldReturnSessionIfTokenValid(){

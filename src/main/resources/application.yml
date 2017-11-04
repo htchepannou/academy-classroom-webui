@@ -26,7 +26,7 @@ logging:
 
 application:
   backend:
-    AcademyBackend:
+    CourseBackend:
       url: "https://io-tchepannou-academy-service.herokuapp.com"
     UserBackend:
       url: "https://io-tchepannou-a-user-service.herokuapp.com"

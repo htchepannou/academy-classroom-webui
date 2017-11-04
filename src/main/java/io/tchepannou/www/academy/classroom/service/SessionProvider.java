@@ -1,8 +1,9 @@
 package io.tchepannou.www.academy.classroom.service;
 
+import io.tchepannou.rest.HttpNotFoundException;
+import io.tchepannou.rest.HttpUnauthorizedException;
 import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
-import io.tchepannou.www.academy.classroom.backend.user.UserException;
 import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.servlet.LoginFilter;
@@ -42,7 +43,7 @@ public class SessionProvider {
         // Resolve session from access token
         final String accessToken = getAccessToken(request);
         if (accessToken == null) {
-            throw new SessionException(404, "No access token");
+            throw new SessionException("No access token");
         }
 
         try {
@@ -50,8 +51,8 @@ public class SessionProvider {
             session = mapper.toSessionModel(dto);
             request.setAttribute(ATTR_SESSION, session);
             return session;
-        } catch (UserException e){
-            throw new SessionException(e.getStatusCode(), e.getErrorDetails(), e);
+        } catch (HttpUnauthorizedException | HttpNotFoundException e){
+            throw new SessionException(e.getMessage(), e);
         }
     }
 

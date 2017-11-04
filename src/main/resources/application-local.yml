@@ -3,7 +3,7 @@ server:
 
 application:
   backend:
-    AcademyBackend:
+    CourseBackend:
       url: "http://localhost:18080"
     UserBackend:
       url: "http://localhost:18081"

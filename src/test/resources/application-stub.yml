@@ -1,11 +1,11 @@
 application:
   backend:
-    AcademyBackend:
+    CourseBackend:
       port: 48080
-      url: "http://localhost:${application.backend.AcademyBackend.port}"
+      url: "http://localhost:${application.backend.CourseBackend.port}"
     UserBackend:
       port: 48081
-      url: "http://localhost:${application.backend.AcademyBackend.port}"
+      url: "http://localhost:${application.backend.UserBackend.port}"
   login:
     port: 48090
     url: "http://localhost:${application.login.port}"

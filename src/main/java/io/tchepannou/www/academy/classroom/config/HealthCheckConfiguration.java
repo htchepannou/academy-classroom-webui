@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class HealthCheckConfiguration {
 
     @Bean
-    HealthIndicator academyBackendHealthCheck(@Value("${application.backend.AcademyBackend.url}") final String url) {
+    HealthIndicator academyBackendHealthCheck(@Value("${application.backend.CourseBackend.url}") final String url) {
         return createUrlHealthCheck(url + "/health");
     }
 

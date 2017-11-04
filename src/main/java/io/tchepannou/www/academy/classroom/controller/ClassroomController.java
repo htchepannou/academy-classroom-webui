@@ -1,13 +1,14 @@
 package io.tchepannou.www.academy.classroom.controller;
 
-import io.tchepannou.www.academy.classroom.backend.academy.AcademyBackend;
-import io.tchepannou.www.academy.classroom.backend.academy.CourseResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.InstructorDto;
-import io.tchepannou.www.academy.classroom.backend.academy.QuizAnswerResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.QuizResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.StudentDto;
-import io.tchepannou.www.academy.classroom.backend.academy.StudentResponse;
-import io.tchepannou.www.academy.classroom.backend.academy.VideoResponse;
+import io.tchepannou.rest.HttpNotFoundException;
+import io.tchepannou.www.academy.classroom.backend.academy.CourseBackend;
+import io.tchepannou.academy.client.course.CourseResponse;
+import io.tchepannou.academy.client.dto.InstructorDto;
+import io.tchepannou.academy.client.quiz.QuizAnswerResponse;
+import io.tchepannou.academy.client.quiz.QuizResponse;
+import io.tchepannou.academy.client.dto.StudentDto;
+import io.tchepannou.academy.client.course.StudentResponse;
+import io.tchepannou.academy.client.video.VideoResponse;
 import io.tchepannou.www.academy.classroom.backend.user.PersonResponse;
 import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
@@ -43,7 +44,7 @@ public class ClassroomController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
 
     @Autowired
-    private AcademyBackend academyBackend;
+    private CourseBackend academyBackend;
 
     @Autowired
     private UserBackend userBackend;
@@ -112,7 +113,7 @@ public class ClassroomController {
         final List<LessonModel> lessons = course.getLessons();
         final List<SegmentModel> segments = course.getLesson(lessonId).getSegments();
 
-        // Update studends
+        // Update student
         try {
             final SessionModel session = sessionProvider.getCurrentSession(request);
             academyBackend.updateStudent(courseId, segmentId, session.getRoleId());
@@ -136,18 +137,22 @@ public class ClassroomController {
         final SessionModel session = sessionProvider.getCurrentSession(request);
 
         try {
+
+            /* Find the student */
             final StudentDto student = academyBackend.findStudent(courseId, session.getRoleId()).getStudent();
             if (student.getAttendedSegmentCount() < student.getCourseSegmentCount()) {
                 return "redirect:/classroom/" + courseId;
             }
-        } catch (Exception e){
+
+            /* all course done ! */
+            final CourseModel course = getCourse(courseId);
+            model.addAttribute("course", course);
+            return "done";
+
+        } catch (HttpNotFoundException e){
             LOGGER.warn("Unable to get the student", e);
             return "redirect:/classroom/" + courseId;
         }
-
-        final CourseModel course = getCourse(courseId);
-        model.addAttribute("course", course);
-        return "done";
     }
 
 
