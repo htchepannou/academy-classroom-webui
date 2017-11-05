@@ -1,6 +1,6 @@
 package io.tchepannou.www.academy.classroom.service;
 
-import io.tchepannou.www.academy.classroom.backend.user.PersonDto;
+import io.tchepannou.academy.user.client.dto.PersonDto;
 import io.tchepannou.www.academy.classroom.model.PersonModel;
 import org.springframework.stereotype.Controller;
 

@@ -25,11 +25,22 @@ logging:
     file: "%d Type=%level Logger=%c Thread=%thread %m%n"
 
 application:
+  endpoint:
+    academy:
+      url: "https://io-tchepannou-academy-service.herokuapp.com"
+    user:
+      url: "https://io-tchepannou-a-user-service.herokuapp.com"
+    login:
+      url: "https://io-tchepannou-a-login-web.herokuapp.com"
   backend:
     CourseBackend:
-      url: "https://io-tchepannou-academy-service.herokuapp.com"
-    UserBackend:
-      url: "https://io-tchepannou-a-user-service.herokuapp.com"
-  login:
-    baseUrl: "https://io-tchepannou-a-login-web.herokuapp.com"
-    url: "${application.login.baseUrl}/login"
+      url: "${application.endpoint.academy.url}/academy/v1/courses"
+    QuizBackend:
+      url: "${application.endpoint.academy.url}/academy/v1/quiz"
+    VideoBackend:
+      url: "${application.endpoint.academy.url}/academy/v1/videos"
+
+    AuthBackend:
+      url: "${application.endpoint.user.url}/academy/v1/auth"
+    PersonBackend:
+      url: "${application.endpoint.user.url}/academy/v1/persons"

@@ -24,8 +24,8 @@ public class RequiresUserFilter implements Filter {
     @Autowired
     private SessionProvider sessionProvider;
 
-    @Value("${application.login.url}")
-    private String loginUrl;
+    @Value("${application.endpoint.login.url}")
+    private String loginAppUrl;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -54,7 +54,7 @@ public class RequiresUserFilter implements Filter {
                 targetUrl.append('?').append(qs);
             }
             final String doneUrl = URLEncoder.encode(targetUrl.toString(), "utf-8");
-            final String url = String.format("%s?done=%s", loginUrl, doneUrl);
+            final String url = String.format("%s/login?done=%s", loginAppUrl, doneUrl);
 
             LOGGER.info("UnAuthorized. Redirecting to {}", url);
             response.sendRedirect(url);
@@ -74,11 +74,11 @@ public class RequiresUserFilter implements Filter {
         }
     }
 
-    public String getLoginUrl() {
-        return loginUrl;
+    public String getLoginAppUrl() {
+        return loginAppUrl;
     }
 
-    public void setLoginUrl(final String loginUrl) {
-        this.loginUrl = loginUrl;
+    public void setLoginAppUrl(final String loginAppUrl) {
+        this.loginAppUrl = loginAppUrl;
     }
 }

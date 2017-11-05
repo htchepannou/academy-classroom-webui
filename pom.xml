@@ -22,6 +22,7 @@
 
 
         <academy-client.version>1.0.0</academy-client.version>
+        <academy-user-client.version>1.0.0</academy-user-client.version>
         <common-lang.version>2.4</common-lang.version>
         <commons-io.version>2.5</commons-io.version>
         <rest-client.version>1.0.0</rest-client.version>
@@ -49,6 +50,11 @@
             <groupId>io.tchepannou.academy</groupId>
             <artifactId>academy-client</artifactId>
             <version>${academy-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.tchepannou.academy</groupId>
+            <artifactId>academy-user-client</artifactId>
+            <version>${academy-user-client.version}</version>
         </dependency>
         <dependency>
             <groupId>io.tchepannou.rest</groupId>

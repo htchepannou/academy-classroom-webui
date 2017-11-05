@@ -9,7 +9,7 @@ import io.tchepannou.academy.client.dto.QuizChoiceDto;
 import io.tchepannou.academy.client.dto.QuizDto;
 import io.tchepannou.academy.client.dto.SegmentDto;
 import io.tchepannou.academy.client.dto.VideoDto;
-import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
+import io.tchepannou.academy.user.client.dto.SessionDto;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.QuizChoiceModel;

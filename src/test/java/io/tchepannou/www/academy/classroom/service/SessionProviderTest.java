@@ -1,10 +1,10 @@
 package io.tchepannou.www.academy.classroom.service;
 
+import io.tchepannou.academy.user.client.auth.AuthResponse;
+import io.tchepannou.academy.user.client.dto.SessionDto;
 import io.tchepannou.rest.HttpNotFoundException;
 import io.tchepannou.rest.HttpUnauthorizedException;
-import io.tchepannou.www.academy.classroom.backend.user.AuthResponse;
-import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
-import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
+import io.tchepannou.www.academy.classroom.backend.AuthBackend;
 import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class SessionProviderTest {
     HttpServletResponse response;
 
     @Mock
-    private UserBackend userBackend;
+    private AuthBackend authBackend;
 
     @Mock
     private AcademyMapper mapper;
@@ -119,7 +119,7 @@ public class SessionProviderTest {
                 createCookie("guid", "123"),
         });
 
-        when(userBackend.findSessionByToken("123")).thenThrow(new HttpNotFoundException("failed"));
+        when(authBackend.findSessionByToken("123")).thenThrow(new HttpNotFoundException("failed"));
 
         provider.getCurrentSession(request);
     }
@@ -132,7 +132,7 @@ public class SessionProviderTest {
                 createCookie("guid", "123"),
         });
 
-        when(userBackend.findSessionByToken("123")).thenThrow(new HttpUnauthorizedException("failed"));
+        when(authBackend.findSessionByToken("123")).thenThrow(new HttpUnauthorizedException("failed"));
 
         provider.getCurrentSession(request);
     }
@@ -146,7 +146,7 @@ public class SessionProviderTest {
 
         final AuthResponse response = new AuthResponse();
         response.setSession(new SessionDto());
-        when(userBackend.findSessionByToken("123")).thenReturn(response);
+        when(authBackend.findSessionByToken("123")).thenReturn(response);
 
         final SessionModel session = new SessionModel();
         when(mapper.toSessionModel(any())).thenReturn(session);

@@ -38,7 +38,7 @@ public class RequiresUserFilterTest {
 
     @Before
     public void setUp (){
-        filter.setLoginUrl("http://login.com");
+        filter.setLoginAppUrl("http://www.app.com");
         when(request.getRequestURL()).thenReturn(new StringBuffer("http://test.com"));
     }
 
@@ -51,7 +51,7 @@ public class RequiresUserFilterTest {
         filter.doFilter(request, response, chain);
 
         // Then
-        verify(response).sendRedirect("http://login.com?done=http%3A%2F%2Ftest.com");
+        verify(response).sendRedirect("http://www.app.com/login?done=http%3A%2F%2Ftest.com");
         verify(chain, never()).doFilter(request, response);
     }
 

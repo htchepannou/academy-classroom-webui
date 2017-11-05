@@ -1,9 +1,9 @@
 package io.tchepannou.www.academy.classroom.service;
 
+import io.tchepannou.academy.user.client.dto.SessionDto;
 import io.tchepannou.rest.HttpNotFoundException;
 import io.tchepannou.rest.HttpUnauthorizedException;
-import io.tchepannou.www.academy.classroom.backend.user.SessionDto;
-import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
+import io.tchepannou.www.academy.classroom.backend.AuthBackend;
 import io.tchepannou.www.academy.classroom.exception.SessionException;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.servlet.LoginFilter;
@@ -26,7 +26,7 @@ public class SessionProvider {
     public static final String ATTR_SESSION = "io.tchepannou.session";
 
     @Autowired
-    private UserBackend userBackend;
+    private AuthBackend authBackend;
 
     @Autowired
     private AcademyMapper mapper;
@@ -47,7 +47,7 @@ public class SessionProvider {
         }
 
         try {
-            final SessionDto dto = userBackend.findSessionByToken(accessToken).getSession();
+            final SessionDto dto = authBackend.findSessionByToken(accessToken).getSession();
             session = mapper.toSessionModel(dto);
             request.setAttribute(ATTR_SESSION, session);
             return session;

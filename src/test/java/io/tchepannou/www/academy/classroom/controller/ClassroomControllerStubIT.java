@@ -14,6 +14,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,14 +39,15 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest
 @ActiveProfiles(profiles = {"stub"})
 public class ClassroomControllerStubIT {
-    @Value("${application.backend.CourseBackend.port}")
-    private int academyServerPort;
-    private Server academyServer;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomControllerStubIT.class);
 
-    @Value("${application.backend.UserBackend.port}")
+    @Value("${application.endpoint.academy.port}")
+    private int academyServerPort;
+
+    @Value("${application.endpoint.user.port}")
     private int userServerPort;
-    private Server userServer;
-    
+
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -55,7 +58,13 @@ public class ClassroomControllerStubIT {
 
     private HttpServletRequest request;
 
+    private Server academyServer;
+    private Server userServer;
+
+
     private Server startServer(final int port, final Handler handler) throws Exception{
+        LOGGER.info("Starting HTTP server on port {}", port);
+
         final Server server = new Server(port);
         server.setHandler(handler);
         server.start();

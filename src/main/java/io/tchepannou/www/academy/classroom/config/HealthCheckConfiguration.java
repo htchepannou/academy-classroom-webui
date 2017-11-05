@@ -10,17 +10,17 @@ import org.springframework.context.annotation.Configuration;
 public class HealthCheckConfiguration {
 
     @Bean
-    HealthIndicator academyBackendHealthCheck(@Value("${application.backend.CourseBackend.url}") final String url) {
+    HealthIndicator academyBackendHealthCheck(@Value("${application.endpoint.academy.url}") final String url) {
         return createUrlHealthCheck(url + "/health");
     }
 
     @Bean
-    HealthIndicator userBackendHealthCheck(@Value("${application.backend.UserBackend.url}") final String url) {
+    HealthIndicator userBackendHealthCheck(@Value("${application.endpoint.user.url}") final String url) {
         return createUrlHealthCheck(url + "/health");
     }
 
     @Bean
-    HealthIndicator loginHealthCheck(@Value("${application.login.baseUrl}") final String url) {
+    HealthIndicator loginHealthCheck(@Value("${application.endpoint.login.url}") final String url) {
         return createUrlHealthCheck(url + "/health");
     }
 

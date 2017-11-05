@@ -1,16 +1,18 @@
 package io.tchepannou.www.academy.classroom.controller;
 
-import io.tchepannou.rest.HttpNotFoundException;
-import io.tchepannou.www.academy.classroom.backend.academy.CourseBackend;
 import io.tchepannou.academy.client.course.CourseResponse;
+import io.tchepannou.academy.client.course.StudentResponse;
 import io.tchepannou.academy.client.dto.InstructorDto;
+import io.tchepannou.academy.client.dto.StudentDto;
 import io.tchepannou.academy.client.quiz.QuizAnswerResponse;
 import io.tchepannou.academy.client.quiz.QuizResponse;
-import io.tchepannou.academy.client.dto.StudentDto;
-import io.tchepannou.academy.client.course.StudentResponse;
 import io.tchepannou.academy.client.video.VideoResponse;
-import io.tchepannou.www.academy.classroom.backend.user.PersonResponse;
-import io.tchepannou.www.academy.classroom.backend.user.UserBackend;
+import io.tchepannou.academy.user.client.person.PersonResponse;
+import io.tchepannou.rest.HttpNotFoundException;
+import io.tchepannou.www.academy.classroom.backend.CourseBackend;
+import io.tchepannou.www.academy.classroom.backend.PersonBackend;
+import io.tchepannou.www.academy.classroom.backend.QuizBackend;
+import io.tchepannou.www.academy.classroom.backend.VideoBackend;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
@@ -44,10 +46,16 @@ public class ClassroomController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassroomController.class);
 
     @Autowired
-    private CourseBackend academyBackend;
+    private CourseBackend courseBackend;
 
     @Autowired
-    private UserBackend userBackend;
+    private VideoBackend videoBackend;
+
+    @Autowired
+    private QuizBackend quizBackend;
+
+    @Autowired
+    private PersonBackend personBackend;
 
     @Autowired
     private AcademyMapper academyMapper;
@@ -94,7 +102,7 @@ public class ClassroomController {
         final SegmentModel segment = lesson.getSegment(segmentId);
 
         final String[] values = request.getParameterValues("value");
-        final QuizAnswerResponse response = academyBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
+        final QuizAnswerResponse response = quizBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
 
         final QuizValidationResultModel result = new QuizValidationResultModel();
         result.setValid(response.isValid());
@@ -116,7 +124,7 @@ public class ClassroomController {
         // Update student
         try {
             final SessionModel session = sessionProvider.getCurrentSession(request);
-            academyBackend.updateStudent(courseId, segmentId, session.getRoleId());
+            courseBackend.updateStudent(courseId, segmentId, session.getRoleId());
         } catch (Exception e){
             LOGGER.warn("Unable to update the student", e);
         }
@@ -139,7 +147,7 @@ public class ClassroomController {
         try {
 
             /* Find the student */
-            final StudentDto student = academyBackend.findStudent(courseId, session.getRoleId()).getStudent();
+            final StudentDto student = courseBackend.findStudent(courseId, session.getRoleId()).getStudent();
             if (student.getAttendedSegmentCount() < student.getCourseSegmentCount()) {
                 return "redirect:/classroom/" + courseId;
             }
@@ -191,7 +199,7 @@ public class ClassroomController {
         // Attendance
         final SessionModel session = sessionProvider.getCurrentSession(request);
         try {
-            final StudentResponse response = academyBackend.findStudent(course.getId(), session.getRoleId());
+            final StudentResponse response = courseBackend.findStudent(course.getId(), session.getRoleId());
             updateAttendance(course, response.getStudent());
         } catch (Exception e){
             LOGGER.warn("Unable to load the course attendance", e);
@@ -253,13 +261,13 @@ public class ClassroomController {
 
     private CourseModel getCourse(final Integer id){
         /* course */
-        final CourseResponse response = academyBackend.findCourseById(id);
+        final CourseResponse response = courseBackend.findCourseById(id);
         final CourseModel course = academyMapper.toCourseModel(response.getCourse());
 
         /* Instructors */
         List<InstructorDto> instructorDtos = response.getCourse().getInstructors();
         if (instructorDtos != null && instructorDtos.size() > 0){
-            final PersonResponse personResponse = userBackend.findPersonByRole(instructorDtos.get(0).getRoleId());
+            final PersonResponse personResponse = personBackend.findPersonByRole(instructorDtos.get(0).getRoleId());
             final PersonModel instructor = userMapper.toPersonModel(personResponse.getPerson());
             course.setInstructor(instructor);
         }
@@ -276,7 +284,7 @@ public class ClassroomController {
             return null;
         }
 
-        final VideoResponse videoResponse = academyBackend.findVideoById(videoId);
+        final VideoResponse videoResponse = videoBackend.findVideoById(videoId);
         return academyMapper.toVideoModel(videoResponse.getVideo());
     }
 
@@ -286,7 +294,7 @@ public class ClassroomController {
             return null;
         }
 
-        final QuizResponse response = academyBackend.findQuizById(quizId);
+        final QuizResponse response = quizBackend.findQuizById(quizId);
         final QuizModel quiz =  academyMapper.toQuizModel(response.getQuiz());
         quiz.setChoices(
                 response.getQuiz().getChoices().stream()
