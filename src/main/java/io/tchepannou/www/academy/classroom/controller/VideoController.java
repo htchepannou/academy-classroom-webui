@@ -6,9 +6,9 @@ import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class VideoController {
@@ -19,15 +19,14 @@ public class VideoController {
     private AcademyMapper academyMapper;
 
     @RequestMapping(value="/video/{videoId}")
-    public String getVideo(
-            @PathVariable final Integer videoId,
-            final Model model
-    ){
+    public ModelAndView getVideo(@PathVariable final Integer videoId){
+        ModelAndView model = new ModelAndView("video");
 
         final VideoResponse videoResponse = videoBackend.findVideoById(videoId);
         final VideoModel video = academyMapper.toVideoModel(videoResponse.getVideo());
-        model.addAttribute("video", video);
-        return "video";
+        model.addObject("video", video);
+
+        return model;
     }
 
 }
