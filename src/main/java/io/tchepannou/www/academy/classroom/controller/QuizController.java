@@ -8,10 +8,10 @@ import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -27,10 +27,7 @@ public class QuizController {
 
 
     @RequestMapping(value="/quiz/{quizId}")
-    public String getQuiz(
-            @PathVariable  final Integer quizId,
-            final Model model
-    ){
+    public ModelAndView getQuiz(@PathVariable  final Integer quizId){
 
         final QuizResponse response = quizBackend.findQuizById(quizId);
         final QuizModel quiz =  academyMapper.toQuizModel(response.getQuiz());
@@ -39,8 +36,10 @@ public class QuizController {
                         .map(s -> academyMapper.toQuizChoiceModel(s))
                         .collect(Collectors.toList())
         );
-        model.addAttribute("quiz", quiz);
-        return "quiz";
+
+        final ModelAndView model = new ModelAndView("quiz");
+        model.addObject("quiz", quiz);
+        return model;
     }
 
     @RequestMapping(value="/quiz/{quizId}/answer")

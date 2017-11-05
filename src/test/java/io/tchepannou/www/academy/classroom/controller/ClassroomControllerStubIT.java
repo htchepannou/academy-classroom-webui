@@ -133,18 +133,6 @@ public class ClassroomControllerStubIT extends ControllerStubSupport{
         assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10111/done");
     }
 
-//    @Test
-//    public void shouldAnswerQuiz() throws Exception {
-//        // Given
-//        when (request.getParameterValues(anyString())).thenReturn(new String[] {"foo"});
-//
-//        // When
-//        final QuizValidationResultModel result = controller.answer(100, 101, 10111, request);
-//
-//        // Then
-//        assertThat(result.isValid()).isFalse();
-//        assertThat(result.getMessage()).isEqualTo("Looser");
-//    }
 
     @Test
     public void shouldFinishSegment() throws Exception {
