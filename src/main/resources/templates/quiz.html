@@ -1,0 +1,64 @@
+<form id="quizform">
+    <div class="embed-responsive-item quiz">
+        <h3 class="question" th:text="${quiz.question}">Quiz Question</h3>
+        <div class="markdown description" th:utext="${quiz.description}" th:if="${quiz.description}">Quiz Description</div>
+        <div class="answers" th:replace="fragments/quiz :: ${quiz.type}">
+            ANSWERS
+        </div>
+    </div>
+</form>
+
+<!-- Success -->
+<div class="modal fade" id="modal_success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" th:text="#{modal.quiz.success.title}"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-primary" href="javascript: onQuizEnded()" th:text="#{button.continue}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Failure -->
+<div class="modal fade" id="modal_failure" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" th:text="#{modal.quiz.failure.title}"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" th:text="#{button.try_again}"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    //<![CDATA[
+    function onQuizSubmit() {
+        $.ajax({
+            type: 'POST',
+            url: /*[['/quiz/' + ${quiz.id} + '/answer']]*/ '-url-',
+            data: $('#quizform').serialize(),
+            datatype: 'json',
+            success: function (data){
+                console.log('result', data);
+                if (data.valid){
+                    $('#modal_success .modal-body').text(data.message);
+                    $('#modal_success').modal();
+                } else {
+                    $('#modal_failure .modal-body').text(data.message);
+                    $('#modal_failure').modal();
+                }
+            }
+        });
+    }
+    //]]>
+</script>

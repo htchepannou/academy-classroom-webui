@@ -4,24 +4,16 @@ import io.tchepannou.academy.client.course.CourseResponse;
 import io.tchepannou.academy.client.course.StudentResponse;
 import io.tchepannou.academy.client.dto.InstructorDto;
 import io.tchepannou.academy.client.dto.StudentDto;
-import io.tchepannou.academy.client.quiz.QuizAnswerResponse;
-import io.tchepannou.academy.client.quiz.QuizResponse;
-import io.tchepannou.academy.client.video.VideoResponse;
 import io.tchepannou.academy.user.client.person.PersonResponse;
 import io.tchepannou.rest.HttpNotFoundException;
 import io.tchepannou.www.academy.classroom.backend.CourseBackend;
 import io.tchepannou.www.academy.classroom.backend.PersonBackend;
-import io.tchepannou.www.academy.classroom.backend.QuizBackend;
-import io.tchepannou.www.academy.classroom.backend.VideoBackend;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.PersonModel;
-import io.tchepannou.www.academy.classroom.model.QuizModel;
-import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
-import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import io.tchepannou.www.academy.classroom.service.UrlProvider;
@@ -33,10 +25,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,12 +37,6 @@ public class ClassroomController {
 
     @Autowired
     private CourseBackend courseBackend;
-
-    @Autowired
-    private VideoBackend videoBackend;
-
-    @Autowired
-    private QuizBackend quizBackend;
 
     @Autowired
     private PersonBackend personBackend;
@@ -88,26 +72,6 @@ public class ClassroomController {
     ){
         openSegment(courseId, lessonId, segmentId, model, request);
         return "classroom";
-    }
-
-    @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/quiz/answer")
-    public @ResponseBody QuizValidationResultModel answer(
-            @PathVariable final Integer courseId,
-            @PathVariable final Integer lessonId,
-            @PathVariable final Integer segmentId,
-            final HttpServletRequest request
-    ){
-        final CourseModel course = getCourse(courseId);
-        final LessonModel lesson = course.getLesson(lessonId);
-        final SegmentModel segment = lesson.getSegment(segmentId);
-
-        final String[] values = request.getParameterValues("value");
-        final QuizAnswerResponse response = quizBackend.answerQuiz(segment.getQuizId(), Arrays.asList(values));
-
-        final QuizValidationResultModel result = new QuizValidationResultModel();
-        result.setValid(response.isValid());
-        result.setMessage(response.getMessage());
-        return result;
     }
 
     @RequestMapping(value="/classroom/{courseId}/{lessonId}/{segmentId}/done")
@@ -183,18 +147,6 @@ public class ClassroomController {
         // Current Segment
         final SegmentModel segment = segmentId == null ? lesson.getSegments().get(0) : lesson.getSegment(segmentId);
         model.addAttribute("segment", segment);
-
-        // Video
-        final VideoModel video = getVideo(segment);
-        if (video != null) {
-            model.addAttribute("video", video);
-        }
-
-        // Quiz
-        final QuizModel quiz = getQuiz(segment);
-        if (quiz != null) {
-            model.addAttribute("quiz", quiz);
-        }
 
         // Attendance
         final SessionModel session = sessionProvider.getCurrentSession(request);
@@ -273,34 +225,5 @@ public class ClassroomController {
         }
 
         return course;
-    }
-
-    private VideoModel getVideo(final SegmentModel segment){
-        return getVideo(segment.getVideoId());
-    }
-
-    private VideoModel getVideo(final Integer videoId){
-        if (videoId == null){
-            return null;
-        }
-
-        final VideoResponse videoResponse = videoBackend.findVideoById(videoId);
-        return academyMapper.toVideoModel(videoResponse.getVideo());
-    }
-
-    private QuizModel getQuiz(final SegmentModel segment){
-        final Integer quizId = segment.getQuizId();
-        if (quizId == null){
-            return null;
-        }
-
-        final QuizResponse response = quizBackend.findQuizById(quizId);
-        final QuizModel quiz =  academyMapper.toQuizModel(response.getQuiz());
-        quiz.setChoices(
-                response.getQuiz().getChoices().stream()
-                    .map(s -> academyMapper.toQuizChoiceModel(s))
-                    .collect(Collectors.toList())
-        );
-        return quiz;
     }
 }

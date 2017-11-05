@@ -3,10 +3,7 @@ package io.tchepannou.www.academy.classroom.controller;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
 import io.tchepannou.www.academy.classroom.model.PersonModel;
-import io.tchepannou.www.academy.classroom.model.QuizModel;
-import io.tchepannou.www.academy.classroom.model.QuizValidationResultModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
-import io.tchepannou.www.academy.classroom.model.VideoModel;
 import io.tchepannou.www.academy.support.jetty.HandlerStub;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -30,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -145,7 +141,7 @@ public class ClassroomControllerStubIT {
         controller.index(100, 101, 10112, model, request);
 
         // THEN
-        assertThat(model).hasSize(5);
+        assertThat(model).hasSize(4);
 
         final CourseModel course = (CourseModel)model.get("course");
         assertCourse(course);
@@ -167,13 +163,6 @@ public class ClassroomControllerStubIT {
         assertThat(segment.getDurationSecond()).isEqualTo(215);
         assertThat(segment.getDuration()).isEqualTo("03:35");
 
-        final VideoModel video = (VideoModel)model.get("video");
-        assertThat(video.getId()).isEqualTo(10112);
-        assertThat(video.getDurationSecond()).isEqualTo(121);
-        assertThat(video.getEmbedUrl()).isEqualTo("https://www.youtube.com/embed/+YyRDFx3e28");
-        assertThat(video.getType()).isEqualTo("youtube");
-        assertThat(video.getVideoId()).isEqualTo("+YyRDFx3e28");
-
         assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10112/done");
     }
 
@@ -186,7 +175,7 @@ public class ClassroomControllerStubIT {
         controller.index(100, 101, 10111, model, request);
 
         // THEN
-        assertThat(model).hasSize(6);
+        assertThat(model).hasSize(4);
 
         final CourseModel course = (CourseModel)model.get("course");
         assertCourse(course);
@@ -204,37 +193,21 @@ public class ClassroomControllerStubIT {
         assertThat(segment.getSummary()).isEqualTo("Sample summary #11");
         assertThat(segment.getDescription()).isEqualTo("<p>Sample description #11</p>\n");
 
-        final QuizModel quiz = (QuizModel)model.get("quiz");
-        assertThat(quiz.getId()).isEqualTo(10111);
-        assertThat(quiz.getType()).isEqualTo("multichoice");
-        assertThat(quiz.getQuestion()).isEqualTo("Who might be a potential end user of documentation?");
-        assertThat(quiz.getDescription()).isEqualTo("<p>This is the description</p>\n");
-        assertThat(quiz.getSuccessMessage()).isEqualTo("Awesome");
-        assertThat(quiz.getFailureMessage()).isEqualTo("Looser");
-        assertThat(quiz.getChoices()).hasSize(3);
-
-        final VideoModel video = (VideoModel)model.get("video");
-        assertThat(video.getId()).isEqualTo(10111);
-        assertThat(video.getDurationSecond()).isEqualTo(171);
-        assertThat(video.getEmbedUrl()).isEqualTo("https://www.youtube.com/embed/fdfdoio");
-        assertThat(video.getType()).isEqualTo("youtube");
-        assertThat(video.getVideoId()).isEqualTo("fdfdoio");
-
         assertThat(model.get("nextUrl")).isEqualTo("/classroom/100/101/10111/done");
     }
 
-    @Test
-    public void shouldAnswerQuiz() throws Exception {
-        // Given
-        when (request.getParameterValues(anyString())).thenReturn(new String[] {"foo"});
-
-        // When
-        final QuizValidationResultModel result = controller.answer(100, 101, 10111, request);
-
-        // Then
-        assertThat(result.isValid()).isFalse();
-        assertThat(result.getMessage()).isEqualTo("Looser");
-    }
+//    @Test
+//    public void shouldAnswerQuiz() throws Exception {
+//        // Given
+//        when (request.getParameterValues(anyString())).thenReturn(new String[] {"foo"});
+//
+//        // When
+//        final QuizValidationResultModel result = controller.answer(100, 101, 10111, request);
+//
+//        // Then
+//        assertThat(result.isValid()).isFalse();
+//        assertThat(result.getMessage()).isEqualTo("Looser");
+//    }
 
     @Test
     public void shouldFinishSegment() throws Exception {
