@@ -27,60 +27,11 @@
     </div>
     <div class="course">
 
-        <!-- === VIDEO ==== -->
         <div class="video-area" th:if="${segment.type} == 'video'">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-1 hidden-xs hidden-sm"></div>
-                    <div class="col-md-10">
-                        <div id="video-container" class="embed-responsive embed-responsive-16by9"></div>
-                    </div>
-                </div>
-                <div class="row toolbar">
-                    <a class="btn btn-default" th:text="#{button.next}" th:attr="href=${nextUrl}">Next</a>
-                </div>
-            </div>
-
-            <script th:inline="javascript">
-                function onVideoEnded(){
-                    moveToNextSegment();
-                }
-
-                $(document).ready(function(){
-                    var videoId = /*[[${segment.videoId}]]*/ '-video-id-';
-
-                    $('#video-container').load('/video/' + videoId);
-                });
-            </script>
+            <div th:replace="fragments/classroom :: video"></div>
         </div>
-
-        <!-- === QUIZ ==== -->
         <div class="quiz-area" th:if="${segment.type} == 'quiz'">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-1 hidden-xs hidden-sm"></div>
-                    <div class="col-md-10">
-                        <div id="quiz-container" class="embed-responsive embed-responsive-16by9"></div>
-                    </div>
-                </div>
-
-                <div class="row toolbar">
-                    <a class="btn btn-primary" th:text="#{button.submit_answer}" onclick="onQuizSubmit()">Submit Answer</a>
-                    <a class="btn btn-default" th:text="#{button.skip_quiz}" th:attr="href=${nextUrl}">Skip Quiz</a>
-                </div>
-            </div>
-
-            <script th:inline="javascript">
-                function onQuizEnded(){
-                    moveToNextSegment();
-                }
-
-                $(document).ready(function(){
-                    var quizId = /*[[${segment.quizId}]]*/ '-quiz-id-';
-
-                    $('#quiz-container').load('/quiz/' + quizId);
-                });
-            </script>
+            <div th:replace="fragments/classroom :: quiz"></div>
         </div>
 
         <div class="container-fluid">
@@ -93,7 +44,6 @@
 
                     <ul class="nav nav-pills">
                         <li class="active"><a data-toggle="pill" href="#overview" th:text="#{label.overview}">Overview</a></li>
-                        <li><a data-toggle="pill" href="#resources" th:text="#{label.resources}">Resources</a></li>
                         <li><a data-toggle="pill" href="#about" th:text="#{label.about}">About</a></li>
                         <li><a data-toggle="pill" href="#instructor" th:text="#{label.instructor}">Instructor</a></li>
                     </ul>
@@ -133,10 +83,6 @@
                                     <div class="biography" th:text="${course.instructor.biography}">Biography</div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div id="resources" class="tab-pane fade">
-                            <div class="markdown" th:utext="${segment.description}">Segment Description</div>
                         </div>
 
                     </div>

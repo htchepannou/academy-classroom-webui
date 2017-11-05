@@ -17,7 +17,7 @@ import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import io.tchepannou.www.academy.classroom.service.UrlProvider;
-import io.tchepannou.www.academy.classroom.service.UserMapper;
+import io.tchepannou.www.academy.classroom.service.PersonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class ClassroomController {
     private AcademyMapper academyMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    private PersonMapper personMapper;
 
     @Autowired
     private UrlProvider urlProvider;
@@ -217,10 +217,10 @@ public class ClassroomController {
         final CourseModel course = academyMapper.toCourseModel(response.getCourse());
 
         /* Instructors */
-        List<InstructorDto> instructorDtos = response.getCourse().getInstructors();
+        final List<InstructorDto> instructorDtos = response.getCourse().getInstructors();
         if (instructorDtos != null && instructorDtos.size() > 0){
             final PersonResponse personResponse = personBackend.findPersonByRole(instructorDtos.get(0).getRoleId());
-            final PersonModel instructor = userMapper.toPersonModel(personResponse.getPerson());
+            final PersonModel instructor = personMapper.toPersonModel(personResponse.getPerson());
             course.setInstructor(instructor);
         }
 

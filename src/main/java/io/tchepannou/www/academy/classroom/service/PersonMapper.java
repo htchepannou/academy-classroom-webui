@@ -5,7 +5,7 @@ import io.tchepannou.www.academy.classroom.model.PersonModel;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class UserMapper {
+public class PersonMapper {
     public PersonModel toPersonModel(final PersonDto dto){
         final PersonModel model = new PersonModel();
         model.setId(dto.getId());
