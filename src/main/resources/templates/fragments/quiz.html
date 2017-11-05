@@ -17,7 +17,7 @@
 
 <div class="answers" th:fragment="singlechoice">
     <ul>
-        <li th:each="choice:${quiz.choices}">
+        <li th:each="choice:${quiz.choices}" class="choice">
             <input type="radio" name="value" th:attr="value=${choice.id}"/>
             <span th:text="${choice.text}">TEXT</span>
         </li>
@@ -25,7 +25,7 @@
 </div>
 <div class="answers" th:fragment="multichoice">
     <ul>
-        <li th:each="choice:${quiz.choices}">
+        <li th:each="choice:${quiz.choices}" class="choice">
             <input type="checkbox" name="value" th:attr="value=${choice.id}"/>
             <span th:text="${choice.text}">TEXT</span>
         </li>

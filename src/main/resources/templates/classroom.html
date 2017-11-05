@@ -52,7 +52,15 @@
 
                         <div id="overview" class="tab-pane fade in active">
                             <div class="container-fluid">
+                                <div class="row toolbar" th:if="${segment.type} == 'text'">
+                                    <a class="btn btn-primary" th:text="#{button.next}" th:attr="href=${nextUrl}">Next</a>
+                                </div>
+
                                 <div class="markdown" th:utext="${segment.description}">Segment Description</div>
+
+                                <div class="row toolbar" th:if="${segment.type} == 'text'">
+                                    <a class="btn btn-primary" th:text="#{button.next}" th:attr="href=${nextUrl}">Next</a>
+                                </div>
                             </div>
                         </div>
 
