@@ -2,22 +2,19 @@ package io.tchepannou.www.academy.classroom.controller;
 
 import io.tchepannou.academy.client.course.CourseResponse;
 import io.tchepannou.academy.client.course.StudentResponse;
-import io.tchepannou.academy.client.dto.InstructorDto;
 import io.tchepannou.academy.client.dto.StudentDto;
-import io.tchepannou.academy.user.client.person.PersonResponse;
 import io.tchepannou.rest.HttpNotFoundException;
 import io.tchepannou.www.academy.classroom.backend.CourseBackend;
 import io.tchepannou.www.academy.classroom.backend.PersonBackend;
 import io.tchepannou.www.academy.classroom.model.BaseModel;
 import io.tchepannou.www.academy.classroom.model.CourseModel;
 import io.tchepannou.www.academy.classroom.model.LessonModel;
-import io.tchepannou.www.academy.classroom.model.PersonModel;
 import io.tchepannou.www.academy.classroom.model.SegmentModel;
 import io.tchepannou.www.academy.classroom.model.SessionModel;
 import io.tchepannou.www.academy.classroom.service.AcademyMapper;
+import io.tchepannou.www.academy.classroom.service.PersonMapper;
 import io.tchepannou.www.academy.classroom.service.SessionProvider;
 import io.tchepannou.www.academy.classroom.service.UrlProvider;
-import io.tchepannou.www.academy.classroom.service.PersonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,18 +209,7 @@ public class ClassroomController {
     }
 
     private CourseModel getCourse(final Integer id){
-        /* course */
         final CourseResponse response = courseBackend.findCourseById(id);
-        final CourseModel course = academyMapper.toCourseModel(response.getCourse());
-
-        /* Instructors */
-        final List<InstructorDto> instructorDtos = response.getCourse().getInstructors();
-        if (instructorDtos != null && instructorDtos.size() > 0){
-            final PersonResponse personResponse = personBackend.findPersonByRole(instructorDtos.get(0).getRoleId());
-            final PersonModel instructor = personMapper.toPersonModel(personResponse.getPerson());
-            course.setInstructor(instructor);
-        }
-
-        return course;
+        return academyMapper.toCourseModel(response.getCourse());
     }
 }

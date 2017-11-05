@@ -3,6 +3,7 @@ package io.tchepannou.www.academy.classroom.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseModel extends BaseModel {
     private String title;
@@ -13,9 +14,9 @@ public class CourseModel extends BaseModel {
     private String status;
     private Date publishedDateTime;
     private Date updatedDateTime;
-    private List<LessonModel> lessons = new ArrayList<>();
-    private PersonModel instructor;
     private String duration;
+    private List<LessonModel> lessons = new ArrayList<>();
+    private List<Integer> instructorRoleIds = new ArrayList<>();
 
     public LessonModel getLesson(Integer lessonId){
         return lessons.stream()
@@ -96,19 +97,25 @@ public class CourseModel extends BaseModel {
         this.lessons = lessons;
     }
 
-    public PersonModel getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(final PersonModel instructor) {
-        this.instructor = instructor;
-    }
-
     public String getDuration() {
         return duration;
     }
 
     public void setDuration(final String duration) {
         this.duration = duration;
+    }
+
+    public List<Integer> getInstructorRoleIds() {
+        return instructorRoleIds;
+    }
+
+    public void setInstructorRoleIds(final List<Integer> instructorRoleIds) {
+        this.instructorRoleIds = instructorRoleIds;
+    }
+
+    public String getInstructorRoleIdCsv (){
+        return instructorRoleIds.stream()
+                .map(i -> String.valueOf(i))
+                .collect(Collectors.joining(","));
     }
 }

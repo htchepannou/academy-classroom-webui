@@ -65,6 +65,14 @@ public class AcademyMapper {
                         .collect(Collectors.toList())
             );
         }
+
+        if (dto.getInstructors() != null){
+            model.setInstructorRoleIds(
+                    dto.getInstructors().stream()
+                        .map(i -> i.getRoleId())
+                        .collect(Collectors.toList())
+            );
+        }
         return model;
     }
 

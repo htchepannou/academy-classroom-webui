@@ -78,19 +78,7 @@
                         </div>
 
                         <div id="instructor" class="tab-pane fade">
-                            <div class="instructor">
-                                <img th:attr="src=${course.instructor.pictureUrl}" />
-                                <div>
-                                    <h4 th:text="${course.instructor.displayName}">Ray Sponsible</h4>
-                                    <h6 th:text="${course.instructor.title}">Software Developer</h6>
-                                    <div class="links">
-                                        <a target="_new" th:attr="href=${course.instructor.websiteUrl}" th:text="#{label.website}">Website</a>
-                                        |
-                                        <a href="#" th:text="#{label.all_courses}">See All Courses</a>
-                                    </div>
-                                    <div class="biography" th:text="${course.instructor.biography}">Biography</div>
-                                </div>
-                            </div>
+                            <div th:replace="fragments/classroom :: instructors"></div>
                         </div>
 
                     </div>

@@ -1,0 +1,12 @@
+<div class="instructor" th:each="instructor:${instructors}">
+    <img th:attr="src=${instructor.pictureUrl}" />
+    <div>
+        <h4 th:text="${instructor.displayName}">Ray Sponsible</h4>
+        <h6 th:text="${instructor.title}">Software Developer</h6>
+        <div class="links">
+            <a target="_new" th:attr="href=${instructor.websiteUrl}" th:text="#{label.website}" th:if="${instructor.websiteUrl}">Website</a>
+        </div>
+        <div class="biography" th:text="${instructor.biography}">Biography</div>
+    </div>
+    <hr/>
+</div>

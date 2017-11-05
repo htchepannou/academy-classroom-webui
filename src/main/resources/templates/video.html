@@ -1,27 +1,27 @@
-    <div id="video-player" class="embed-responsive-item"></div>
+<div id="video-player" class="embed-responsive-item"></div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script th:inline="javascript">
-        //<![CDATA[
+<script src="https://www.youtube.com/iframe_api"></script>
+<script th:inline="javascript">
+    //<![CDATA[
 
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player( 'video-player', {
-                width: 750,
-                height: 500,
-                videoId: /*[[${video.videoId}]]*/ 'ID',
-                events: {
-                    'onReady': function(event){
-                        event.target.playVideo();
-                    },
-                    'onStateChange': function(event){
-                        console.log('onStateChange', event);
-                        if (event.data == YT.PlayerState.ENDED) {
-                            onVideoEnded();
-                        }
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player( 'video-player', {
+            width: 750,
+            height: 500,
+            videoId: /*[[${video.videoId}]]*/ 'ID',
+            events: {
+                'onReady': function(event){
+                    event.target.playVideo();
+                },
+                'onStateChange': function(event){
+                    console.log('onStateChange', event);
+                    if (event.data == YT.PlayerState.ENDED) {
+                        onVideoEnded();
                     }
                 }
-            });
-        }
-        //]]>
-    </script>
+            }
+        });
+    }
+    //]]>
+</script>
